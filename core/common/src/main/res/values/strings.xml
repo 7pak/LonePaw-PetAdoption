@@ -1,0 +1,5 @@
+<resources>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="whatsapp_message">Hey
+    is your pet still available for adoption?</string>
+</resources>
