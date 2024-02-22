@@ -4,16 +4,13 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.core.common.Resource
-import com.core.network.profile_api.model.AddPostData
+import com.core.common.utls.Resource
 import com.core.network.profile_api.model.UpdateProfileData
 import com.feature.profile.domain.use_cases.ProfileUseCase
-import com.profile.ui.screens.profile.ProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +28,7 @@ class ProfileDetailModel @Inject constructor(
         getProfile()
     }
 
-    fun updateProfileStete(newState:ProfileDetailState){
+    fun updateProfileState(newState:ProfileDetailState){
         state = newState.copy()
     }
 
@@ -50,15 +47,14 @@ class ProfileDetailModel @Inject constructor(
                                 country = it.country,
                                 email = it.email,
                                 name = it.name,
-                                username = it.username)
+                                username = it.username,
+                                profilePic = it.profilePic
+                            )
                         }
 
                     }
                     is Resource.Error -> {
-                        resource.message?.let {
-                            state = state.copy(error = it)
-                        }
-                        Log.d("AppError", "getFavorite: ${state.error}")
+                        Log.d("AppError", "getProfile:${resource.message} ")
                     }
                 }
             }
@@ -76,7 +72,8 @@ class ProfileDetailModel @Inject constructor(
                     country = state.country,
                     email = state.email,
                     name = state.name,
-                    username = state.username)
+                    username = state.username,
+                    profilePic = state.profilePic?.toUri())
             ).collect { resource ->
 
                 when (resource) {
@@ -84,11 +81,12 @@ class ProfileDetailModel @Inject constructor(
                     is Resource.Loading -> state = state.copy(isLoading = resource.isLoading)
                     is Resource.Success -> {
                         getProfile()
+                        state = state.copy(serverMessage = resource.message.toString())
                         Log.d("AppSuccess", "updateProfile: ${resource.data?.status?.description}")
                         Log.d("AppSuccess", "updateProfile: ${resource.data?.status}---${resource.message}")
                     }
                     is Resource.Error -> {
-                        state = state.copy(error = "${resource.data?.status?.description}")
+                        state = state.copy(serverMessage = resource.message.toString())
                         Log.d("AppError", "updateProfile: ${resource.data?.status?.description}")
                         Log.d("AppError", "updateProfile: ${resource.data?.status?.value}---${resource.message}")
                     }

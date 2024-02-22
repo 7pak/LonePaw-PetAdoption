@@ -1,9 +1,11 @@
 package com.home.domain.use_cases
 
-import com.core.common.Resource
+import android.util.Log
+import com.core.common.utls.Resource
+import com.core.database.dao.PetsDao
 import com.core.database.model.toPetInfo
 import com.core.network.home_api.model.GetPetDataResponse
-import com.home.domain.HomeRepositroy
+import com.home.domain.repository.HomeRepositroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +13,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
 import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,14 +20,15 @@ import kotlin.math.pow
 
 
 @Singleton
-class GetPosts @Inject constructor(
+open class GetPosts @Inject constructor(
     private val homeRepository: HomeRepositroy,
-    private val petsDao: com.core.database.dao.PetsDao
+    private val petsDao: PetsDao
 ) {
 
-    operator fun invoke(): Flow<Resource<GetPetDataResponse>> {
+    open operator fun invoke(): Flow<Resource<GetPetDataResponse>> {
+        Log.d("UIrEcOMPOS", "GETpETS: $")
+
         var retryCount = 0
-       var lastRequestTime = 0L
         return flow {
             emit(Resource.Loading(isLoading = true))
 
@@ -38,8 +40,6 @@ class GetPosts @Inject constructor(
                     it.toPetInfo()
                 })
             }
-
-            val localPosts = petsDao.getAllPets()
 
             emit(Resource.Success(data = remotePosts))
 

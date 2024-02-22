@@ -6,6 +6,8 @@ import com.core.common.Constants
 import com.core.common.Constants.BASE_URL
 import com.core.network.auth_api.AuthApi
 import com.core.network.auth_api.AuthDataProvider
+import com.core.network.chat_api.ChatApi
+import com.core.network.chat_api.ChatDataProvider
 import com.core.network.home_api.HomeApi
 import com.core.network.home_api.HomeDataProvider
 import com.core.network.profile_api.ProfileApi
@@ -105,6 +107,18 @@ object NetworkModule {
     @Singleton
     fun provideHomeDataProvider(homeApi: HomeApi, tokenFlow: Flow<String?>,profileApi: ProfileApi): HomeDataProvider {
         return HomeDataProvider(homeApi, tokenFlow, profileApi = profileApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatApi(retrofit: Retrofit): ChatApi {
+        return retrofit.create(ChatApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatDataProvider(chatApi: ChatApi, tokenFlow: Flow<String?>): ChatDataProvider {
+        return ChatDataProvider(chatApi,tokenFlow)
     }
 
     @Provides

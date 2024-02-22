@@ -1,6 +1,7 @@
 package com.home.ui.screens.home.items
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,17 +42,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.core.common.test_tags.HomeTestTags.CARD_PET_ITEM
 import com.core.common.R
 import com.core.common.ui.theme.Red
 import com.core.database.model.PetInfo
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PetItem(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit, onNavigate: () -> Unit) {
     Card(
         onClick = {
             onNavigate()
         }, modifier = Modifier
+            .testTag(CARD_PET_ITEM)
             .height(150.dp)
             .padding(horizontal = 20.dp)
             .shadow(
@@ -73,10 +76,11 @@ fun PetData(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit) {
         mutableStateOf(pet.petFavorite)
     }
 
+
+
     LaunchedEffect(key1 = pet.petFavorite){
         isLiked = pet.petFavorite
     }
-
 
     Row(
         Modifier
@@ -86,7 +90,7 @@ fun PetData(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit) {
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(context = context)
                 .data(
-                    pet.petPhoto
+                    pet.petPhoto?.firstOrNull() ?:R.drawable.ic_pet
                 )
                 .crossfade(500)
                 .build(),
@@ -156,7 +160,11 @@ fun PetData(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit) {
         IconButton(onClick = {
             if (isLiked) {
                 onLike(true)
-            }else onLike(false)
+                isLiked = false
+            }else {
+                onLike(false)
+                isLiked = true
+            }
         }, modifier = Modifier.weight(1f)) {
             Icon(
                 imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,

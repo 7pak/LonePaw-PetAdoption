@@ -2,9 +2,9 @@ package com.abdts.petadoption
 
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.core.view.ViewCompat
@@ -14,22 +14,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.abdts.petadoption.navigation.AppNavigation
 import com.abdts.petadoption.ui.theme.PetAdoptionTheme
-import com.core.common.UserVerificationModel
+import com.core.common.utls.UserVerificationModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var userVerificationModel:UserVerificationModel
+    lateinit var userVerificationModel: UserVerificationModel
     private var currentToken: String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         lifecycleScope.launch(Dispatchers.Main) {
             currentToken = userVerificationModel.tokenFlow.firstOrNull()
@@ -37,6 +39,7 @@ class MainActivity : ComponentActivity() {
                 "AppToken",
                 " Collected token in MAINaCTIVITY :${currentToken} "
             )
+
 
             setContent {
 
@@ -49,6 +52,8 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content))
             { view, insets ->

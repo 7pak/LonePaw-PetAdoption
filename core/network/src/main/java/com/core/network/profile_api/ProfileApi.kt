@@ -28,7 +28,7 @@ interface ProfileApi {
         @Path("id") id: Int
     ): DataResponse<*>
 
-    @GET("api/v1/profiles")
+    @GET("api/v1/profile")
     suspend fun getProfile(
         @Header("Authorization") token: String
     ): GetProfileDataResponse

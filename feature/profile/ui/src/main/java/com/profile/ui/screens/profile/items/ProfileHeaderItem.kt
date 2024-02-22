@@ -37,9 +37,9 @@ import com.profile.ui.screens.profile.ProfileState
 import com.profile.ui.ui.theme.PetAdoptionTheme
 
 @Composable
-fun ProfileHeaderItem(context: Context,profileData: ProfileState,onNavigate:()->Unit) {
+fun ProfileHeaderItem(context: Context,profileData: ProfileState,onLogout:()->Unit,onNavigate:()->Unit) {
     Box(modifier = Modifier.fillMaxWidth()) {
-        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.TopStart)) {
+        IconButton(onClick = onLogout, modifier = Modifier.align(Alignment.TopStart)) {
             Icon(
                 imageVector = Icons.Default.Logout,
                 contentDescription = "logout",
@@ -98,6 +98,6 @@ fun ProfileHeaderItem(context: Context,profileData: ProfileState,onNavigate:()->
 @Composable
 fun ProfileHeaderItemPreview() {
     PetAdoptionTheme {
-        ProfileHeaderItem(LocalContext.current, ProfileState()){}
+        ProfileHeaderItem(LocalContext.current, ProfileState(),{}){}
     }
 }

@@ -6,6 +6,7 @@ plugins {
     id(Plugins.KOTLIN_SYMBOL_PROCESSING)
     kotlin(Plugins.KOTLIN_ANNOTATION_PROCESSING_TOOL)
     id(Plugins.KTORFIT)
+    id("com.google.gms.google-services")
 }
 configure<de.jensklingenberg.ktorfit.gradle.KtorfitGradleConfiguration> {
     version = Version.ktorfit
@@ -155,14 +156,21 @@ dependencies {
     //Data store
     implementation(DataStore.data_store)
 
+    //firebase\
+    implementation(platform(Firebase.firebase_bom))
+    implementation ("com.google.firebase:firebase-dynamic-module-support:16.0.0-beta03")
+
     implementation(project(":core:network"))
     implementation(project(":feature:auth:ui"))
     implementation(project(":feature:home:ui"))
     implementation(project(":feature:profile:ui"))
+    implementation(project(":feature:chat:ui"))
 
     implementation(project(":core:common"))
     implementation(project(":feature:home:domain"))
     implementation(project(":feature:profile:data"))
+    implementation(project(":feature:home:data"))
+    implementation(project(":core:database"))
 
 
     androidTestImplementation(project(":feature:auth:domain"))

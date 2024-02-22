@@ -5,21 +5,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.core.database.dao.PetsDao
 import com.core.network.profile_api.model.AddPostData
-import com.core.network.profile_api.model.UpdateProfileData
 import com.feature.profile.domain.use_cases.ProfileUseCase
 import com.profile.ui.screens.navArgs
 import com.profile.ui.shared.AddPostNavArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -73,7 +70,7 @@ class AddPostModel @Inject constructor(
                     petDesc = state.petDesc,
                     petGender = state.petGender,
                     petName = state.petName,
-                    petPhoto = state.petPhoto,
+                    petPhotos = state.petPhoto,
                     petType = state.petType
                 )
             ).collect { resource ->
@@ -86,7 +83,7 @@ class AddPostModel @Inject constructor(
                         Log.d("AppSuccess", "addPost: ${resource.data?.status?.description}")
                         Log.d(
                             "AppSuccess",
-                            "addPost: ${resource.data?.status}---${resource.message}"
+                            "addPost: ${resource.data?.status?.value}---${resource.message}"
                         )
                     }
 
@@ -115,7 +112,7 @@ class AddPostModel @Inject constructor(
                     petDesc = state.petDesc,
                     petGender = state.petGender,
                     petName = state.petName,
-                    petPhoto = state.petPhoto,
+                    petPhotos = state.petPhoto,
                     petType = state.petType
                 )
             ).collect { resource ->
@@ -160,7 +157,7 @@ class AddPostModel @Inject constructor(
                     petAge = myPost.petAge,
                     petBreed = myPost.petBreed,
                     petGender = myPost.petGender,
-                    petPhoto = myPost.petPhoto.toUri(),
+                    petPhoto = myPost.petPhoto,
                     petType = myPost.petType
                 )
             )

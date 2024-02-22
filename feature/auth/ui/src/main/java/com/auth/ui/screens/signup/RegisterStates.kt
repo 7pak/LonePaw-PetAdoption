@@ -6,11 +6,10 @@ data class RegisterStates(
     val email:String = "",
     val password:String = "",
     val passwordConfirmation:String = "",
-    val country:String = "",
     val contactNumber:String = "",
     val address:String = "",
     val isLoading:Boolean = false,
+    val showDialog:Boolean = false,
     val success:String?=null,
-    val token:String?=null,
     val error:String?=null
 )

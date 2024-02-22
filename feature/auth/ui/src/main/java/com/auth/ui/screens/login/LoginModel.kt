@@ -3,8 +3,8 @@ package com.auth.ui.screens.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth.domain.use_cases.AuthUseCase
-import com.core.common.Resource
-import com.core.common.UserVerificationModel
+import com.core.common.utls.Resource
+import com.core.common.utls.UserVerificationModel
 import com.core.network.auth_api.models.LoginUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,14 +33,18 @@ class LoginModel @Inject constructor(
                 .collectLatest { resource ->
                     when (resource) {
                         is Resource.Success -> {
+                            val token = resource.data?.data?.token
+                            val userId = resource.data?.data?.userId
                             updateStatus(
                                 _state.value.copy(
-                                    success = resource.data?.message,
-                                    token = resource.data?.data?.token
+                                    success = resource.data?.message
                                 )
                             )
-                            state.value.token?.let {
+                            token?.let {
                                 userVerificationModel.saveToken(it)
+                            }
+                            userId?.let {
+                                userVerificationModel.saveUserId(it)
                             }
                         }
 

@@ -1,7 +1,6 @@
 package com.core.network.profile_api.model
 
 
-import android.net.Uri
 import com.google.gson.annotations.SerializedName
 
 data class AddPostData(
@@ -17,8 +16,8 @@ data class AddPostData(
     val petGender: String,
     @SerializedName("pet_name")
     val petName: String,
-    @SerializedName("pet_photo")
-    val petPhoto: Uri?,
+    @SerializedName("pet_photos")
+    val petPhotos: List<String>?,
     @SerializedName("pet_type")
     val petType: String
 )

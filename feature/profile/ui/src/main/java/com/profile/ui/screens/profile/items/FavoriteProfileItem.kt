@@ -28,10 +28,11 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.core.common.R
+import com.core.database.model.PetInfo
 import com.profile.ui.ui.theme.PetAdoptionTheme
 
 @Composable
-fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,onNavigate:()->Unit) {
+fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,petInfo: PetInfo?,onNavigate:()->Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -60,7 +61,7 @@ fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,onNavigate
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(context = context)
                     .data(
-                        R.drawable.ic_pet
+                        petInfo?.petPhoto?.ifEmpty {R.drawable.ic_pet }?:R.drawable.ic_pet
                     )
                     .transformations(CircleCropTransformation())
                     .build(),
@@ -75,7 +76,7 @@ fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,onNavigate
                     .alpha(0.4f)
             )
             Text(
-                text = "Pet Name",
+                text = petInfo?.petName?.ifEmpty { "Pet Name"}?:"Pet Name",
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontWeight = FontWeight.Normal,
                     fontFamily = FontFamily.SansSerif

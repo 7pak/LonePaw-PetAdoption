@@ -25,8 +25,11 @@ object DatabaseLayer {
         ).build()
     }
 
+    @Singleton
     @Provides
     fun providePetDao(database: PetDatabase): PetsDao {
         return database.petDao
     }
+
+
 }

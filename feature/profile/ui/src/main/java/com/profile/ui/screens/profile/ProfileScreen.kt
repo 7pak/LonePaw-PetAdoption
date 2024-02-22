@@ -56,7 +56,10 @@ fun ProfileScreen(navigator: ProfileScreenNavigator,profileModel: ProfileModel =
 
         Column(Modifier.fillMaxSize()) {
             val context = LocalContext.current
-            ProfileHeaderItem(context = context,profileData = state) {
+            ProfileHeaderItem(context = context,profileData = state, onLogout = {
+                profileModel.logout()
+                navigator.logout()
+            }) {
                 navigator.navigateToProfileDetailScreen()
             }
 
@@ -67,7 +70,7 @@ fun ProfileScreen(navigator: ProfileScreenNavigator,profileModel: ProfileModel =
                     .height(IntrinsicSize.Min),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                MyPetsProfileItem(context = context, modifier = Modifier.weight(4f)) {
+                MyPetsProfileItem(context = context, modifier = Modifier.weight(4f),petInfo = profileModel.lastMyPet) {
                     navigator.navigateToMyPetsScreen()
                 }
                 Divider(
@@ -76,7 +79,7 @@ fun ProfileScreen(navigator: ProfileScreenNavigator,profileModel: ProfileModel =
                         .fillMaxHeight()
                 )
 
-                FavoriteProfileItem(context = context, modifier = Modifier.weight(4f)) {
+                FavoriteProfileItem(context = context, modifier = Modifier.weight(4f),petInfo = profileModel.lastFavorite) {
                     navigator.navigateToFavoriteScreen()
                 }
             }

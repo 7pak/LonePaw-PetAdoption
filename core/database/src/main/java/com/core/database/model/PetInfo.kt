@@ -2,6 +2,8 @@ package com.core.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.core.database.data_source.PetTypeConverter
 import com.core.network.home_api.model.PetData
 
 @Entity(tableName = "Pet_Info")
@@ -16,8 +18,11 @@ data class PetInfo(
     val petGender: String,
     val petName: String,
     val ownerName:String,
+    val ownerId:Int,
+    val ownerProfilePic:String?,
     val petDesc:String,
-    val petPhoto: String,
+    @TypeConverters(PetTypeConverter::class)
+    val petPhoto: List<String>?,
     val petType: String,
     val petFavorite:Boolean,
     @PrimaryKey
@@ -36,8 +41,10 @@ fun PetData.toPetInfo(): PetInfo {
         petGender = petGender,
         petName = petName,
         ownerName = ownerName,
+        ownerId = ownerId,
+        ownerProfilePic = ownerProfilePic,
         petDesc = petDesc,
-        petPhoto = petPhoto,
+        petPhoto = petPhotos,
         petType = petType,
         petFavorite = petFavorite,
         petId = id

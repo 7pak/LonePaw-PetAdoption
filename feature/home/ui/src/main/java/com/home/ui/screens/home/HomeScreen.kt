@@ -14,12 +14,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,7 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.common.R
-import com.core.common.TestTags
+import com.core.common.test_tags.HomeTestTags
 import com.home.ui.shared.HomeScreenNavigator
 import com.home.ui.screens.home.items.CategoryItem
 import com.home.ui.screens.home.items.HeaderItem
@@ -43,6 +52,7 @@ import com.home.ui.ui.theme.PetAdoptionTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 
+@OptIn(ExperimentalMaterialApi::class)
 @RootNavGraph(start = true)
 @Destination
 @Composable
@@ -53,11 +63,25 @@ fun HomeScreen(
     val state = homeModel.state
     val context = LocalContext.current
 
+    val hasUnseenMessage by homeModel.hasUnseenMessage.collectAsState()
+
+    val pulRefreshState = rememberPullRefreshState(
+        refreshing = homeModel.state.isRefreshing,
+        onRefresh = {
+            homeModel.getPetsInfos()
+        }
+    )
 
     LaunchedEffect(key1 = true) {
-        homeModel.getPetsInfos(true)
+        //Log.d(TAG, "HomeScreen: ")
+        if (state.selectedCategory.isEmpty() && state.searchQuery.isEmpty()) {
+            homeModel.getPetsInfos(true)
+        }
         homeModel.getProfile()
+        homeModel.updateHasUnseenMessage()
     }
+
+
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
@@ -69,66 +93,104 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                // .background(Color.White)
-                .testTag(TestTags.HOME_SCREEN),
+                .testTag(HomeTestTags.HOME_SCREEN),
+            // .background(Color.White)
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            HeaderItem(context = context,profilePic = state.profilePic,profileName = state.profileName,profileCountry = state.profileCountry) {
+            val scope = rememberCoroutineScope()
+
+            HeaderItem(
+                context = context,
+                profilePic = state.profilePic,
+                profileName = state.profileName,
+                profileCountry = state.profileCountry,
+                hasUnseenMessage = hasUnseenMessage,
+                onChatNavigate = {
+                    navigator.navigateToContactScreen()
+                }
+            ) {
                 navigator.navigateToProfileScreen()
             }
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                  //  .background(MaterialTheme.colorScheme.primary)
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(40.dp))
+            Box(modifier = Modifier.fillMaxSize()) {
 
-                    SearchItem(homeModel = homeModel)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pullRefresh(state = pulRefreshState)
+                        .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                ) {
+                    item {
+                        Spacer(modifier = Modifier.height(40.dp))
 
-                    Spacer(modifier = Modifier.height(30.dp))
-
-                    CategoryItem()
-                }
-
-                item {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 30.dp, horizontal = 20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Newest Pets",
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.SemiBold,
-                                fontStyle = FontStyle.Italic
-                            )
-                        )
-                    }
-                }
-                state.petsListing?.let {
-                    items(state.petsListing) { pet ->
-                        PetItem(context = context, pet = pet, onLike = {
-                            if (it){
-                                homeModel.removeFavorite(pet.petId)
-                                homeModel.getPetsInfos()
-                            }else {
-                                homeModel.addFavorite(pet.petId)
-                                homeModel.getPetsInfos()
-                            }
-                        }) {
-                            navigator.navigateToPetDetailScreen(pet.petId)
+                        SearchItem(homeModel = homeModel) {
+                            homeModel.getSearchResult(state.searchQuery)
                         }
 
-                        Spacer(modifier = Modifier.height(50.dp))
+                        Spacer(modifier = Modifier.height(30.dp))
+
+                        CategoryItem(homeModel = homeModel) {
+                            homeModel.getPostsCategories()
+                        }
                     }
+
+                    item {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 30.dp, horizontal = 20.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Newest Pets",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontStyle = FontStyle.Italic
+                                )
+                            )
+                        }
+                    }
+                    if (state.petsListing.isNullOrEmpty()) {
+                        item {
+                            Text(
+                                text = "There is no pet for adoption",
+                                style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.tertiary)
+                            )
+                        }
+                    } else {
+                        items(state.petsListing) { pet ->
+                            PetItem(context = context, pet = pet, onLike = {
+                                if (it) {
+                                    homeModel.removeFavorite(pet.petId)
+                                } else {
+                                    homeModel.addFavorite(pet.petId)
+                                }
+                            }) {
+                                navigator.navigateToPetDetailScreen(pet.petId)
+                            }
+
+                            Spacer(modifier = Modifier.height(50.dp))
+                        }
+                    }
+                }
+
+                PullRefreshIndicator(
+                    refreshing = state.isRefreshing,
+                    state = pulRefreshState,
+                    modifier = Modifier.align(
+                        Alignment.TopCenter
+                    )
+                )
+
+                if (state.isLoading) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.tertiary, modifier = Modifier.align(
+                            Alignment.Center
+                        )
+                    )
                 }
             }
         }

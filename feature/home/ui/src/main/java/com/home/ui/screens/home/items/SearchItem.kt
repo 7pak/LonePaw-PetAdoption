@@ -15,9 +15,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -46,10 +48,11 @@ import com.home.ui.ui.theme.PetAdoptionTheme
 @Composable
 fun SearchItem(
     modifier: Modifier = Modifier,
-    homeModel: HomeModel
+    homeModel: HomeModel,
+    onSearchPressed: () -> Unit
 ) {
+    val state = homeModel.state
 
-    val searchQuery by homeModel.searchQuery.collectAsState()
 
     val focusedManager = LocalFocusManager.current
 
@@ -60,9 +63,9 @@ fun SearchItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
-            value =searchQuery ,
+            value = state.searchQuery,
             onValueChange = {
-                homeModel.setQuery(it)
+                homeModel.updateState(state.copy(searchQuery = it))
             },
             modifier = Modifier
                 .shadow(
@@ -78,12 +81,21 @@ fun SearchItem(
                 focusedBorderColor = MaterialTheme.colorScheme.tertiary,
             ),
             placeholder = {
-                Text(text = "Search for pet...", color = MaterialTheme.colorScheme.tertiary.copy(0.3f))
+                Text(
+                    text = "Search for pet...",
+                    color = MaterialTheme.colorScheme.tertiary.copy(0.3f)
+                )
             },
             singleLine = true,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { focusedManager.clearFocus(true) })
+            keyboardActions = KeyboardActions(onSearch = {
+                if (state.searchQuery.isNotEmpty()) {
+                    onSearchPressed()
+                }
+                focusedManager.clearFocus(true)
+            }
+            )
         )
 
         Spacer(modifier = Modifier.width(20.dp))
@@ -94,9 +106,18 @@ fun SearchItem(
                 .clip(RoundedCornerShape(15.dp))
                 .background(MaterialTheme.colorScheme.tertiary), contentAlignment = Alignment.Center
         ) {
-            IconButton(onClick = {
-                            focusedManager.clearFocus(true)
-                                 }, modifier = Modifier.fillMaxSize()) {
+            IconButton(
+                onClick = {
+                    onSearchPressed()
+                    focusedManager.clearFocus(true)
+                },
+                enabled = state.searchQuery.isNotEmpty(),
+                colors = IconButtonDefaults.iconButtonColors(
+                    disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(0.2f),
+                    containerColor = MaterialTheme.colorScheme.tertiary
+                ),
+                modifier = Modifier.fillMaxSize()
+            ) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "Search",

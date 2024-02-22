@@ -1,5 +1,6 @@
 package com.profile.ui.screens.profile_detail
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,11 +18,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.NavigateNext
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -52,6 +54,14 @@ fun ProfileDetailScreen(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
+    LaunchedEffect(state.serverMessage){
+        if (state.serverMessage.isNotEmpty()) {
+            Toast.makeText(context, state.serverMessage, Toast.LENGTH_SHORT).show()
+            navigator.navigateUp()
+        }
+
+    }
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Image(
             painter = painterResource(id = R.drawable.background_post),
@@ -67,8 +77,8 @@ fun ProfileDetailScreen(
         ) {
 
             item {
-                EditImageItem(context = context) {
-
+                EditImageItem(context = context, image = state.profilePic) {
+                    profileDetailModel.updateProfileState(state.copy(profilePic = it.toString()))
                 }
             }
 
@@ -81,7 +91,7 @@ fun ProfileDetailScreen(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     OutLineTextFieldItem(value = state.name, onValueChange = {
-                        profileDetailModel.updateProfileStete(state.copy(name = it))
+                        profileDetailModel.updateProfileState(state.copy(name = it))
                     }, label = "Name", focusManager = focusManager, modifier = Modifier.weight(5f))
 
                     Spacer(
@@ -93,7 +103,7 @@ fun ProfileDetailScreen(
                     OutLineTextFieldItem(
                         value = state.username,
                         onValueChange = {
-                            profileDetailModel.updateProfileStete(state.copy(username = it))
+                            profileDetailModel.updateProfileState(state.copy(username = it))
                         },
                         label = "Username",
                         focusManager = focusManager,
@@ -113,7 +123,7 @@ fun ProfileDetailScreen(
                     OutLineTextFieldItem(
                         value = state.country,
                         onValueChange = {
-                            profileDetailModel.updateProfileStete(state.copy(country = it))
+                            profileDetailModel.updateProfileState(state.copy(country = it))
                         },
                         label = "Country",
                         focusManager = focusManager,
@@ -130,7 +140,7 @@ fun ProfileDetailScreen(
                     OutLineTextFieldItem(
                         value = state.contactNumber,
                         onValueChange = {
-                            profileDetailModel.updateProfileStete(state.copy(contactNumber = it))
+                            profileDetailModel.updateProfileState(state.copy(contactNumber = it))
                         },
                         label = "Contact number",
                         focusManager = focusManager,
@@ -144,7 +154,7 @@ fun ProfileDetailScreen(
                 OutLineTextFieldItem(
                     value = state.email,
                     onValueChange = {
-                        profileDetailModel.updateProfileStete(state.copy(email = it))
+                        profileDetailModel.updateProfileState(state.copy(email = it))
                     },
                     label = "Email",
                     focusManager = focusManager,
@@ -161,7 +171,7 @@ fun ProfileDetailScreen(
                 OutLineTextFieldItem(
                     value = state.address,
                     onValueChange = {
-                        profileDetailModel.updateProfileStete(state.copy(address = it))
+                        profileDetailModel.updateProfileState(state.copy(address = it))
                     },
                     label = "Address",
                     focusManager = focusManager,
@@ -207,14 +217,19 @@ fun ProfileDetailScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     ConfirmProfileButtonItem(icon = Icons.Default.Done, isEnabled = true) {
-
                         profileDetailModel.updateProfile()
+
                     }
                 }
             }
         }
-
-
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.tertiary, modifier = Modifier.align(
+                    Alignment.Center
+                )
+            )
+        }
     }
 }
 

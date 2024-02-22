@@ -48,4 +48,8 @@ dependencies {
 
     implementation(project(":feature:auth:domain"))
     implementation(project(":core:network"))
+
+    implementation(Retrofit.retrofit)
+    implementation(Retrofit.retrofit_gson_converter)
+
 }

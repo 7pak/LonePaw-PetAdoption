@@ -3,20 +3,29 @@ package com.auth.ui.screens.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth.domain.use_cases.AuthUseCase
-import com.core.common.Resource
-import com.core.common.UserVerificationModel
+import com.core.common.utls.Resource
+import com.core.common.utls.UserVerificationModel
 import com.core.network.auth_api.models.RegisterUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpModel @Inject constructor(private val authUseCase: AuthUseCase,private val userVerificationModel: UserVerificationModel) : ViewModel() {
+class SignUpModel @Inject constructor(
+    private val authUseCase: AuthUseCase,
+    private val userVerificationModel: UserVerificationModel
+) : ViewModel() {
 
     private val _state: MutableStateFlow<RegisterStates> = MutableStateFlow(RegisterStates())
     val state: StateFlow<RegisterStates> = _state
+
+    val countriesList = getCountriesList()
+    private var _selectedCountry:MutableStateFlow<Country> = MutableStateFlow(Country())
+    val selectedCountry:StateFlow<Country> = _selectedCountry
+
 
     fun registerUser() {
 
@@ -27,22 +36,26 @@ class SignUpModel @Inject constructor(private val authUseCase: AuthUseCase,priva
                     username = state.value.username,
                     email = state.value.email,
                     password = state.value.password,
-                    country = state.value.country,
-                    contactNumber = state.value.contactNumber,
+                    country = selectedCountry.value.fullName,
+                    contactNumber = getContactNumber(),
                     address = state.value.address
                 )
             )
                 .collect { resource ->
                     when (resource) {
                         is Resource.Success -> {
+                            val token = resource.data?.body()?.data?.token
+                            val userId = resource.data?.body()?.data?.userId
                             updateStatus(
                                 _state.value.copy(
-                                    success = resource.data?.message,
-                                    token = resource.data?.data?.token
+                                    success = resource.data?.body()?.message
                                 )
                             )
-                            state.value.token?.let {
+                            token?.let {
                                 userVerificationModel.saveToken(it)
+                            }
+                            userId?.let {
+                                userVerificationModel.saveUserId(it)
                             }
 
                         }
@@ -52,10 +65,17 @@ class SignUpModel @Inject constructor(private val authUseCase: AuthUseCase,priva
                     }
                 }
         }
-
     }
 
-    fun updateStatus(status: RegisterStates) {
-        _state.value = status.copy()
+    fun updateStatus(state: RegisterStates) {
+        _state.value = state
+    }
+
+    fun updateCountry(country: Country){
+        _selectedCountry.value = country
+    }
+
+    private fun getContactNumber():String{
+        return selectedCountry.value.code+state.value.contactNumber
     }
 }

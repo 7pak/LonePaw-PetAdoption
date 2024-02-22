@@ -24,7 +24,7 @@ fun loginInputErrorMessage(loginStates: LoginStates):String?{
     if (isEmailOrUsername(loginStates.emailOrUsername)==null){
         return "invalid username or email"
     }
-    if (!isPasswordValid(loginStates.password)){
+    if (!isPasswordValid(loginStates.password,inLogin = true)){
         return "Invalid password"
     }
     return null

@@ -21,7 +21,9 @@ data class ProfileData(
     @SerializedName("user_id")
     val userId: Int,
     @SerializedName("username")
-    val username: String
+    val username: String,
+    @SerializedName("profile")
+    val profilePic: String?
 )
 
 typealias GetProfileDataResponse = DataResponse<ProfileData>

@@ -1,9 +1,8 @@
 package com.feature.profile.domain.use_cases
 
 import android.util.Log
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.core.network.profile_api.model.AddPostData
-import com.core.network.profile_api.model.UpdateProfileData
 import com.feature.profile.domain.repository.ProfileRepository
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.Dispatchers

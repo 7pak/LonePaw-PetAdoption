@@ -1,9 +1,9 @@
 package com.home.domain.use_cases
 
 import android.util.Log
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.core.database.model.PetInfo
-import com.home.domain.HomeRepositroy
+import com.home.domain.repository.HomeRepositroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

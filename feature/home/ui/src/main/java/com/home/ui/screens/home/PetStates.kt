@@ -10,5 +10,6 @@ data class PetStates(
     val isLoading:Boolean = false,
     val isRefreshing:Boolean = false,
     val searchQuery:String = "",
+    val selectedCategory:String = "",
     val errorMessage:String? = ""
 )

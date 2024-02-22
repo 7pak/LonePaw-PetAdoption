@@ -1,9 +1,10 @@
 package com.home.domain.use_cases
 
 import android.util.Log
-import com.core.common.Resource
+import com.core.common.utls.Resource
+import com.core.database.dao.PetsDao
 import com.core.network.DataResponse
-import com.home.domain.HomeRepositroy
+import com.home.domain.repository.HomeRepositroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -20,6 +21,7 @@ class RemoveFavoriteHome @Inject constructor(
             emit(Resource.Loading(isLoading = true))
 
             val response = homeRepositroy.removeFavorite(id)
+
             emit(Resource.Success(response))
         }.catch {
 

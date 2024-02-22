@@ -1,7 +1,7 @@
 package com.feature.profile.domain.use_cases
 
 import android.util.Log
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.core.database.dao.PetsDao
 import com.core.database.model.PetInfo
 import com.feature.profile.domain.repository.ProfileRepository

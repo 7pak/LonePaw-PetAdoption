@@ -2,6 +2,7 @@ package com.core.network.auth_api.models
 
 import com.core.network.DataResponse
 import com.google.gson.annotations.SerializedName
+import retrofit2.Response
 
 
 data class RegisterUserData(
@@ -14,6 +15,8 @@ data class RegisterUserData(
     val contactNumber:String,
     val country:String,
     val address:String,
-    val token:String? =null
+    val token:String? =null,
+    @SerializedName("user_id")
+    val userId:Int?=null
 )
-typealias RegisterUserResponse = DataResponse<RegisterUserData>
+typealias RegisterUserResponse = Response<DataResponse<RegisterUserData>>

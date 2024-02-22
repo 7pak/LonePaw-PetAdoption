@@ -1,3 +1,4 @@
+import Version.accompanistVersion
 import Version.coilVersion
 import Version.compose_des_version
 import Version.dagger_hilt_Version
@@ -19,6 +20,7 @@ object Version {
     const val compose_des_version = "1.9.42-beta"
     const val ktor_version = "2.3.1"
     const val ktorfit = "1.6.0"
+    const val accompanistVersion = "0.35.0-alpha"
 
 }
 
@@ -37,11 +39,12 @@ object Deps {
     const val core = "androidx.core:core-ktx:${Version.core}"
     const val lifecycle_runtime = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
     const val actvivty_compose = "androidx.activity:activity-compose:1.8.1"
-    const val compose_bom = "androidx.compose:compose-bom:2023.03.00"
+    const val compose_bom = "androidx.compose:compose-bom:2023.10.01"
     const val compose_ui = "androidx.compose.ui:ui"
     const val compose_graphic = "androidx.compose.ui:ui-graphics"
     const val compose_toolin_preview = "androidx.compose.ui:ui-tooling-preview"
-    const val compose_material3 = "androidx.compose.material3:material3"
+    const val compose_material3 = "androidx.compose.material3:material3-android:1.2.0-rc01"
+    const val constraintsLayout_compose = "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     const val jUnit4 = "junit:junit:4.13.2"
 
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2"
@@ -113,6 +116,14 @@ object DataStore {
 }
 
 object Accompanist {
-    const val foundation = "androidx.compose.foundation:foundation:1.5.4"
+    const val flowLayout = "com.google.accompanist:accompanist-flowlayout:$accompanistVersion"
+    const val permission = "com.google.accompanist:accompanist-permissions:$accompanistVersion"
+    const val swipeRefresh = "com.google.accompanist:accompanist-swiperefresh:$accompanistVersion"
 
+}
+
+object Firebase {
+    const val firebase_bom = "com.google.firebase:firebase-bom:32.7.1"
+    const val firbase_firestore = "com.google.firebase:firebase-firestore"
+    const val firebase_storage = "com.google.firebase:firebase-storage"
 }

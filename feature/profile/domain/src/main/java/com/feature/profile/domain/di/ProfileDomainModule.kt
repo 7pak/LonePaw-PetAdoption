@@ -1,5 +1,6 @@
 package com.feature.profile.domain.di
 
+import com.core.database.dao.PetsDao
 import com.feature.profile.domain.repository.ProfileRepository
 import com.feature.profile.domain.use_cases.AddPost
 import com.feature.profile.domain.use_cases.DeletePost

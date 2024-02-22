@@ -38,6 +38,7 @@ dependencies {
 
     implementation(Deps.core)
     testImplementation(Deps.jUnit4)
+    implementation(platform(Deps.compose_bom))
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
@@ -48,4 +49,6 @@ dependencies {
 
     implementation(project(":core:network"))
     implementation(project(":core:common"))
+    implementation(Retrofit.retrofit)
+
 }

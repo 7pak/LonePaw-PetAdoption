@@ -4,6 +4,9 @@ import androidx.navigation.NavController
 import com.auth.ui.common_components.AuthScreenNavigator
 import com.auth.ui.screens.destinations.LoginScreenDestination
 import com.auth.ui.screens.destinations.SignUpScreenDestination
+import com.feature.chat.ui.screens.destinations.ChatScreenDestination
+import com.feature.chat.ui.screens.destinations.ContactsScreenDestination
+import com.feature.chat.ui.shared.ContactScreenNavigator
 import com.home.ui.screens.destinations.HomeScreenDestination
 import com.home.ui.screens.destinations.PetDetailScreenDestination
 import com.home.ui.shared.HomeScreenNavigator
@@ -18,7 +21,7 @@ import com.ramcosta.composedestinations.navigation.popUpTo
 
 class CoreFeatureNavigator(
     private val navController: NavController
-) : AuthScreenNavigator,HomeScreenNavigator,ProfileScreenNavigator{
+) : AuthScreenNavigator,HomeScreenNavigator,ProfileScreenNavigator,ContactScreenNavigator{
     override fun navigateToProfileDetailScreen() {
         navController.navigate(ProfileDetailScreenDestination)
     }
@@ -33,6 +36,15 @@ class CoreFeatureNavigator(
 
     override fun navigateToFavoriteScreen() {
         navController.navigate(FavoriteScreenDestination)
+    }
+
+    override fun logout() {
+        navController.popBackStack()
+        navController.navigate(LoginScreenDestination) {
+            popUpTo(navController.graph.startDestinationId) {
+                inclusive = false
+            }
+        }
     }
 
     override fun navigateToLoginScreen() {
@@ -57,5 +69,13 @@ class CoreFeatureNavigator(
 
     override fun navigateToPetDetailScreen(id:Int) {
         navController.navigate(PetDetailScreenDestination(id))
+    }
+
+    override fun navigateToContactScreen() {
+        navController.navigate(ContactsScreenDestination)
+    }
+
+    override fun navigateToChatScreen(id: Int) {
+        navController.navigate(ChatScreenDestination(id))
     }
 }

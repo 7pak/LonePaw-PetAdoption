@@ -1,6 +1,7 @@
 package com.core.network.profile_api.model
 
 
+import android.net.Uri
 import com.google.gson.annotations.SerializedName
 
 data class UpdateProfileData(
@@ -15,5 +16,7 @@ data class UpdateProfileData(
     @SerializedName("name_")
     val name: String,
     @SerializedName("username")
-    val username: String
+    val username: String,
+    @SerializedName("profile")
+    val profilePic: Uri?
 )

@@ -4,6 +4,7 @@ plugins {
     id(Plugins.KOTLIN_SYMBOL_PROCESSING)
     id(Plugins.DAGGER_HILT)
     kotlin(Plugins.KOTLIN_ANNOTATION_PROCESSING_TOOL)
+
 }
 
 android {
@@ -105,6 +106,7 @@ dependencies {
     //coli
     implementation(Coil.coil)
 
+    implementation(Retrofit.retrofit)
 
     implementation(project(":core:network"))
     implementation(project(":core:common"))

@@ -48,6 +48,8 @@ dependencies {
     kapt(DaggerHilt.dagger_hilt_compiler)
     implementation(DaggerHilt.dagger_hilt_navigation)
 
+    implementation ("com.google.code.gson:gson:2.10.1")
+
     implementation(project(":core:network"))
     implementation(project(":core:common"))
     implementation(project(":core:database"))

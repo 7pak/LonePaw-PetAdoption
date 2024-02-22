@@ -1,8 +1,10 @@
 package com.home.ui.screens.pet_details.itmes
 
 import android.content.Context
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -26,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -35,9 +41,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.core.common.R
+import com.core.common.ui.theme.Beige
 import com.home.ui.screens.pet_details.PetDetailState
 import com.home.ui.ui.theme.PetAdoptionTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageDetailItem(
     modifier: Modifier = Modifier,
@@ -50,6 +58,10 @@ fun ImageDetailItem(
         mutableStateOf(petInfo.petFavorite)
     }
 
+    val pagerState = rememberPagerState(pageCount = {
+        petInfo.petPhotos.size
+    })
+
     LaunchedEffect(key1 = petInfo.petFavorite) {
         isLiked = petInfo.petFavorite
     }
@@ -57,31 +69,60 @@ fun ImageDetailItem(
 
     Box(modifier = Modifier.fillMaxWidth()) {
 
-        val painter = rememberAsyncImagePainter(
-            model = ImageRequest.Builder(context = context)
-                .data(
-                    petInfo.petPhoto
-                )
-                .crossfade(1000)
-                .build(),
-            placeholder = painterResource(id = R.drawable.ic_pet)
-        )
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(context = context)
+                    .data(
+                        petInfo.petPhotos[index]
+                    )
+                    .crossfade(1000)
+                    .build(),
+                placeholder = painterResource(id = R.drawable.ic_pet)
+            )
 
-        Image(
-            painter = painter,
-            contentDescription = "pet detail image",
+            Image(
+                painter = painter,
+                contentDescription = "pet detail image",
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+                    .height(350.dp),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()
-                .height(350.dp),
-            contentScale = ContentScale.Crop
-        )
+                .padding(5.dp)
+                .align(Alignment.TopStart)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.tertiary)
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                Box(
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(5.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (pagerState.currentPage == iteration)
+                                Beige
+                            else
+                                Beige.copy(alpha = 0.3f)
+                        )
+                )
+            }
+        }
 
         IconButton(
             onClick = {
                 if (isLiked) {
                     onLike(true)
                 } else onLike(false)
+
+                isLiked = !isLiked
             }, modifier = Modifier
                 .align(
                     Alignment.TopEnd

@@ -1,8 +1,8 @@
 package com.home.domain.use_cases
 
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.core.network.home_api.model.GetPetDataResponse
-import com.home.domain.HomeRepositroy
+import com.home.domain.repository.HomeRepositroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

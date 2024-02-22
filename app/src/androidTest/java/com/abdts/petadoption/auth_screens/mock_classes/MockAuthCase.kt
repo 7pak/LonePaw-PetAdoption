@@ -2,7 +2,7 @@ package com.abdts.petadoption.auth_screens.mock_classes
 
 import com.auth.domain.repository.AuthRepository
 import com.auth.domain.use_cases.AuthUseCase
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.core.network.auth_api.models.LoginUserData
 import com.core.network.auth_api.models.LoginUserResponse
 import com.core.network.auth_api.models.RegisterUserData
@@ -17,7 +17,7 @@ class MockAuthCase(private val authhRepository: AuthRepository) :
     override operator fun invoke(loginUserData: LoginUserData): Flow<Resource<LoginUserResponse>> {
         // Create a mock successful response for testing
         return flow {
-            if (loginUserData.username_email == "az_bod" && loginUserData.password == "12345678a") {
+            if (loginUserData.username_email == "az_bod" && loginUserData.password == "12345678aA&") {
                 emit(
                     Resource.Success(
                         LoginUserResponse(
@@ -43,16 +43,16 @@ class MockAuthCase(private val authhRepository: AuthRepository) :
                     Resource.Error("User Already Registered")
                 )
             } else {
-                emit(
-
-                    Resource.Success(
-                        RegisterUserResponse(
-                            message = "Mock Success",
-                            status = 202,
-                            data = registerUserData.copy(token = "fake-token")
-                        )
-                    )
-                )
+//                emit(
+//
+//                    Resource.Success(
+//                        RegisterUserResponse(
+//                            message = "Mock Success",
+//                            status = 202,
+//                            data = registerUserData.copy(token = "fake-token")
+//                        )
+//                    )
+//                )
 
             }
         }

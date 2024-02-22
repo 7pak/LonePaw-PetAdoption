@@ -4,6 +4,7 @@ plugins {
     id(Plugins.DAGGER_HILT)
     id(Plugins.KOTLIN_SYMBOL_PROCESSING)
     kotlin(Plugins.KOTLIN_ANNOTATION_PROCESSING_TOOL)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -63,7 +64,7 @@ dependencies {
     testImplementation(Deps.jUnit4)
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
@@ -80,6 +81,11 @@ dependencies {
 
     //Data store
     implementation(DataStore.data_store)
+
+    //firebase
+    implementation(platform(Firebase.firebase_bom))
+    implementation(Firebase.firbase_firestore)
+    implementation(Firebase.firebase_storage)
 
     //Room
     implementation(RoomDatabase.room_runtime)

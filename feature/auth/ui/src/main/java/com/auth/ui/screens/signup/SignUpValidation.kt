@@ -4,8 +4,8 @@ import com.auth.ui.common_components.isEmailValid
 import com.auth.ui.common_components.isPasswordValid
 import com.auth.ui.common_components.isUsernameValid
 
-fun isFullNameValid(fullName: String): Boolean {
-    return fullName.isNotEmpty()
+fun isTextFieldAreNotEmpty(fullName: String,country:String,contactNumber:String,address:String): Boolean {
+    return fullName.isNotEmpty() &&country.isNotEmpty() && contactNumber.isNotEmpty() && address.isNotEmpty()
 }
 
 fun arePasswordsMatching(password: String, confirmPassword: String): Boolean {

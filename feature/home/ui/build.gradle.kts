@@ -5,6 +5,8 @@ plugins {
     id(Plugins.KOTLIN_SYMBOL_PROCESSING)
     id(Plugins.DAGGER_HILT)
     kotlin(Plugins.KOTLIN_ANNOTATION_PROCESSING_TOOL)
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -68,6 +70,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+    implementation("androidx.compose.material:material:1.5.4")
     implementation(Icons.icon_extended)
 
     //navigation
@@ -87,7 +92,15 @@ dependencies {
     //coli
     implementation(Coil.coil)
     //accompanist
-    implementation(Accompanist.foundation)
+    implementation(Accompanist.flowLayout)
+    implementation(Accompanist.swipeRefresh)
+
+    //firebase
+    implementation(platform(Firebase.firebase_bom))
+    implementation(Firebase.firbase_firestore)
+    implementation(Firebase.firebase_storage)
+
+    
     implementation(project(":core:network"))
     implementation(project(":core:common"))
     implementation(project(":core:database"))

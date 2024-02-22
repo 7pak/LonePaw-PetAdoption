@@ -1,9 +1,7 @@
 package com.feature.profile.domain.use_cases
 
 import android.util.Log
-import com.core.common.Resource
-import com.core.database.model.PetInfo
-import com.core.database.model.toPetInfo
+import com.core.common.utls.Resource
 import com.core.network.profile_api.model.ProfileData
 import com.feature.profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers
@@ -26,9 +24,14 @@ class GetProfile @Inject constructor(
         return flow {
                 emit(Resource.Loading(isLoading = true))
 
+            try {
                 val remotePets = profileRepository.getProfile()
+                Log.d("TRTR", "invoke:${remotePets.data}")
 
                 emit(Resource.Success(remotePets.data))
+            }catch (e:Exception){
+                Log.d("AppError", "getProfile:${profileRepository.getProfile().message} ")
+            }
 
             }.catch {cause ->
 
@@ -39,7 +42,6 @@ class GetProfile @Inject constructor(
                     retryCount++
                     return@catch
                 }
-                Log.d("AppError", "getProfile:${cause} ")
 
                 emit(Resource.Error("An unexpected error occurred: ${cause.localizedMessage}"))
             }

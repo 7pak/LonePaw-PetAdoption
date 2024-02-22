@@ -1,5 +1,6 @@
 package com.home.ui.screens.home.items
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
@@ -19,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,31 +35,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.core.common.R
 import com.core.common.ui.theme.Beige
+import com.home.ui.screens.home.HomeModel
 import com.home.ui.ui.theme.PetAdoptionTheme
 
 @Composable
-fun CategoryItem(modifier: Modifier = Modifier) {
+fun CategoryItem(modifier: Modifier = Modifier,homeModel: HomeModel,onSelectedItem:()->Unit) {
     val scrollStata = rememberScrollState()
+
+    val state  = homeModel.state
 
     val categoryProperty = mapOf(
         "Cat" to R.drawable.ic_cat,
         "Dog" to R.drawable.ic_dog,
         "Bird" to R.drawable.ic_bird,
-        "rabbit" to R.drawable.ic_rabbit,
         "Hamster" to R.drawable.ic_hamster,
+        "Rabbit" to R.drawable.ic_rabbit,
         "Others" to R.drawable.ic_others,
     )
+
+    val categoryPets =
+        mapOf(1 to "Cat", 2 to "Dog", 3 to "Bird", 4 to "Hamster", 5 to "Rabbit",6 to "Others")
+
+
 
     var index = 0
 
     var activeCategory by remember {
-        mutableStateOf(false)
+        mutableStateOf(state.selectedCategory.isNotEmpty())
     }
 
-    var selectedCategory by remember {
-        mutableStateOf("")
+    var selectedItem by remember {
+        mutableStateOf(homeModel.state.selectedCategory)
     }
-
 
     Row(
         modifier = modifier
@@ -86,25 +95,32 @@ fun CategoryItem(modifier: Modifier = Modifier) {
                         )
                         .clip(RoundedCornerShape(15.dp))
                         .background(
-                            color = if (activeCategory && selectedCategory == pet) MaterialTheme.colorScheme.tertiary else Beige
+                            color = if (activeCategory && state.selectedCategory == pet) MaterialTheme.colorScheme.tertiary else Beige
                         )
                         .clickable {
-                            activeCategory = selectedCategory != pet
-                            selectedCategory = if (activeCategory) pet else ""
+                            activeCategory = state.selectedCategory != pet
+                            selectedItem = if (activeCategory) pet else ""
+                            homeModel.updateState(state.copy(selectedCategory = selectedItem))
+                            val id =
+                                categoryPets.entries.find { it.value == selectedItem}?.key ?: -1
+
+                            homeModel.updateCategory(categoryId = id)
+
+                            onSelectedItem()
                         },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(id = icon),
                         contentDescription = null,
-                        tint = if (activeCategory && selectedCategory == pet) Color.White else Color.Black,
+                        tint = if (activeCategory && state.selectedCategory == pet) Color.White else Color.Black,
                         modifier = Modifier.size(30.dp)
                     )
 
                 }
                 Text(
                     text = pet,
-                    color = if (activeCategory && selectedCategory == pet) MaterialTheme.colorScheme.tertiary else Color.Black
+                    color = if (activeCategory && state.selectedCategory == pet) MaterialTheme.colorScheme.tertiary else Color.Black
                 )
             }
             index++
@@ -116,6 +132,6 @@ fun CategoryItem(modifier: Modifier = Modifier) {
 @Composable
 fun CategoryItemPreview() {
     PetAdoptionTheme {
-        CategoryItem()
+      //  CategoryItem(){}
     }
 }

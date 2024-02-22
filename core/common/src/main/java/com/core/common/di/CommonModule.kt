@@ -7,7 +7,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.core.common.app_data.AppDataStoreManager
 import com.core.common.Constants
-import com.core.common.UserVerificationModel
+import com.core.common.utls.UserVerificationModel
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,12 +25,27 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object CommonModule {
+
+
     @Provides
     @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
         PreferenceDataStoreFactory.create {
             context.preferencesDataStoreFile(Constants.DATA_STORE_NAME)
         }
+
+
+    @Provides
+    @Singleton
+    fun provideFireStore() =
+        Firebase.firestore
+
+
+    @Provides
+    @Singleton
+    fun provideFireStorage():StorageReference{
+        return Firebase.storage.reference
+    }
 
     @Provides
     @Singleton

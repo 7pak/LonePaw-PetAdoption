@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.feature.profile.domain.use_cases.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +30,7 @@ class MyPetsModel @Inject constructor(
                     is Resource.Loading -> state = state.copy(isLoading = resource.isLoading)
                     is Resource.Success -> {
                         resource.data?.let {
-                            state = state.copy(petListings = it)
+                            state = state.copy(petListings = it.reversed())
                         }
                     }
                     is Resource.Error -> {

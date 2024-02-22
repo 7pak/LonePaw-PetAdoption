@@ -5,7 +5,7 @@ import com.auth.ui.common_components.isPasswordValid
 import com.auth.ui.common_components.isUsernameValid
 import com.auth.ui.screens.signup.RegisterStates
 import com.auth.ui.screens.signup.arePasswordsMatching
-import com.auth.ui.screens.signup.isFullNameValid
+import com.auth.ui.screens.signup.isTextFieldAreNotEmpty
 import com.auth.ui.screens.signup.signUpInputErrorMessage
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
@@ -20,9 +20,9 @@ class SignUpValidationKtTest {
     }
 
     @Test
-    fun testFullNameValidation() {
-        assertThat(isFullNameValid("Adam Ozel")).isTrue()
-        assertThat(isFullNameValid("")).isFalse() // Invalid, empty string
+    fun testFullFieldsValidation() {
+        assertThat(isTextFieldAreNotEmpty("Adam Ozel","turkey","244552124","istanbul")).isTrue()
+        assertThat(isTextFieldAreNotEmpty("","","","")).isFalse() // Invalid, empty string
     }
 
     @Test
@@ -36,7 +36,7 @@ class SignUpValidationKtTest {
         assertThat(isPasswordValid("Password1")).isTrue()
         assertThat(isPasswordValid("short")).isFalse() // Invalid, less than 8 characters
         assertThat(isPasswordValid("nodigitg")).isFalse() // Invalid, no digit
-        assertThat(isPasswordValid("12345678")).isFalse() // Invalid, no character
+        assertThat(isPasswordValid("12345678aA&")).isFalse() // Invalid, no character
     }
 
     @Test
@@ -50,7 +50,7 @@ class SignUpValidationKtTest {
         val validStatus = RegisterStates(username = "az_bod", email = "adam@gmail.com", password = "Password1", passwordConfirmation = "Password1")
 
         val invalidUsernameStatus = RegisterStates(username = "!az", email = "adam@gmail.com", password="Password12", passwordConfirmation = "Password1")
-        val invalidEmailStatus = RegisterStates(username = "az_bod", email = "adam.gmail@com", password =  "Password12", passwordConfirmation = "Password1")
+        val invalidEmailStatus = RegisterStates(username = "az_bod", email = "adam.gmail@com", password =  "Password12&", passwordConfirmation = "Password1&")
         val invalidPasswordStatus = RegisterStates(username = "az_bod", email = "adam@gmail.com", password = "short", passwordConfirmation = "short")
         val passwordsNotMatchingStatus = RegisterStates(username = "az_bod", email = "adam@gmail.com", password = "Password1", passwordConfirmation =  "Password2")
 

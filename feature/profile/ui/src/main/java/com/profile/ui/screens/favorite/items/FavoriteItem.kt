@@ -3,6 +3,7 @@ package com.profile.ui.screens.favorite.items
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +36,7 @@ import com.core.database.model.PetInfo
 import com.profile.ui.ui.theme.PetAdoptionTheme
 
 @Composable
-fun FavoriteItem(context: Context,petInfo: PetInfo,onRemove:()->Unit) {
+fun FavoriteItem(context: Context,petInfo: PetInfo,onRemove:()->Unit,onNavigate: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -45,11 +46,14 @@ fun FavoriteItem(context: Context,petInfo: PetInfo,onRemove:()->Unit) {
             .clip(shape = CircleShape)
             .background(MaterialTheme.colorScheme.tertiary.copy(0.5f))
             .padding(vertical = 8.dp)
+            .clickable {
+                onNavigate()
+            }
     ) {
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(context = context)
                 .data(
-                    petInfo.petPhoto?: R.drawable.ic_pet
+                    petInfo.petPhoto?.firstOrNull()?.ifEmpty {  R.drawable.ic_pet} ?: R.drawable.ic_pet
                 )
                 .transformations(CircleCropTransformation())
                 .build(),

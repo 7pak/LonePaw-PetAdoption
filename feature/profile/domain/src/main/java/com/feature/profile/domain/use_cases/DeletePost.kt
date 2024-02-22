@@ -1,7 +1,7 @@
 package com.feature.profile.domain.use_cases
 
 import android.util.Log
-import com.core.common.Resource
+import com.core.common.utls.Resource
 import com.core.network.DataResponse
 import com.feature.profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers

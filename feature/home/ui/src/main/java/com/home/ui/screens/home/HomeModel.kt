@@ -1,54 +1,79 @@
 package com.home.ui.screens.home
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.core.common.Resource
+import com.core.common.Constants.SHARED_CHAT_COLLECTION
+import com.core.common.Constants.USERS_COLLECTION
+import com.core.common.utls.Resource
+import com.core.common.utls.UserVerificationModel
+import com.core.common.utls.toByteArray
 import com.core.database.dao.PetsDao
 import com.core.database.model.toPetInfo
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.storage.StorageReference
 import com.home.domain.use_cases.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.util.UUID
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class HomeModel @Inject constructor(
+    application: Application,
     private val homeUseCase: HomeUseCase,
-    private val dao: PetsDao
-) : ViewModel() {
+    private val dao: PetsDao,
+    private val userVerificationModel: UserVerificationModel,
+    private val firebaseFirestore: FirebaseFirestore,
+    private val firebaseStorage: StorageReference
+) : AndroidViewModel(application) {
 
-    private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery
+    private val context = application
+
+    private val _categoryId: MutableStateFlow<Int> = MutableStateFlow(-1)
+    val categoryId: StateFlow<Int> = _categoryId
 
     var state by mutableStateOf(PetStates())
         private set
 
-    //make the uiEvent sealed class
-    //use the use case data class way
+    private var currentUserId by mutableIntStateOf(-1)
+
+    private var _hasUnseenMessage = MutableStateFlow(false)
+    val hasUnseenMessage: StateFlow<Boolean> = _hasUnseenMessage
 
     init {
         viewModelScope.launch {
-            //if the user didn't type anything for 1 second then we make out api call
-            searchQuery.debounce(1000).collectLatest {
-                getSearchResult(it)
-            }
+            val userId = userVerificationModel.userIdFlow.firstOrNull()
+            currentUserId = userId ?: -1
+
+            getProfile()
+            _hasUnseenMessage.value = hasUnseenMessage()
         }
     }
 
-    fun setQuery(newQuery: String){
-        _searchQuery.value = newQuery
+    fun updateCategory(categoryId: Int) {
+        _categoryId.value = categoryId
+    }
+
+    fun updateState(newState: PetStates) {
+        state = newState
     }
 
     fun getPetsInfos(fromRemote: Boolean = false) {
@@ -58,9 +83,11 @@ class HomeModel @Inject constructor(
                 when (resource) {
                     is Resource.Loading -> {
                         state = state.copy(isLoading = resource.isLoading)
-                        state = state.copy(petsListing =dao.getAllPets().firstOrNull() )
+                        state = state.copy(petsListing = dao.getAllPets().firstOrNull())
                     }
+
                     is Resource.Success -> {
+                        updateState(state.copy(selectedCategory = "", searchQuery = ""))
                         dao.getAllPets().collectLatest {
                             state = state.copy(petsListing = it)
                         }
@@ -68,16 +95,19 @@ class HomeModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        Log.d("AppError", "getPetsInfos: ${resource.message}")
-                        state = state.copy(petsListing =dao.getAllPets().firstOrNull(), errorMessage = resource.message )
+                        Log.d("AppError", "getPest: ${resource.message}")
+                        state = state.copy(
+                            petsListing = dao.getAllPets().firstOrNull(),
+                            errorMessage = resource.message
+                        )
                     }
                 }
             }
         }
     }
 
-    private fun getSearchResult(query:String) {
-
+    fun getSearchResult(query: String) {
+        updateState(state.copy(selectedCategory = ""))
         viewModelScope.launch {
             homeUseCase.getSearchResult(query).onEach { resource ->
                 state = when (resource) {
@@ -92,26 +122,51 @@ class HomeModel @Inject constructor(
 
                     is Resource.Error -> {
                         Log.d("AppError", "getSearchInfo: ${resource.message}")
-                        state.copy(errorMessage = resource.message )
+                        state.copy(errorMessage = resource.message)
                     }
                 }
             }.launchIn(viewModelScope)
         }
     }
 
+    fun getPostsCategories() {
+        updateState(state.copy(searchQuery = ""))
+        viewModelScope.launch {
+            if (categoryId.value == -1) getPetsInfos() else {
+                homeUseCase.getPostsCategory(categoryId.value).onEach { resource ->
+                    state = when (resource) {
+                        is Resource.Loading -> {
+                            state.copy(isLoading = resource.isLoading)
+                        }
 
-    internal fun addFavorite(id:Int){
+                        is Resource.Success -> {
+                            state.copy(petsListing = resource.data?.data?.map { it.toPetInfo() })
+                        }
+
+                        is Resource.Error -> {
+                            Log.d("AppError", "getSearchInfo: ${resource.message}")
+                            state.copy(errorMessage = resource.message)
+                        }
+                    }
+                }.launchIn(viewModelScope)
+            }
+        }
+    }
+
+
+    internal fun addFavorite(id: Int) {
 
         viewModelScope.launch {
-            homeUseCase.addFavorite(id).collect{resource->
-                when(resource){
+            homeUseCase.addFavorite(id).collect { resource ->
+                when (resource) {
                     is Resource.Loading -> {
 
                     }
+
                     is Resource.Success -> {
-                       // getPetsInfos()
                         Log.d("AppSuccess", "addFavorite:${resource.data?.message} ")
                     }
+
                     is Resource.Error -> {
                         Log.d("AppError", "addFavorite:${resource.data?.message} ")
                     }
@@ -120,18 +175,19 @@ class HomeModel @Inject constructor(
         }
     }
 
-    internal fun removeFavorite(id:Int){
+    internal fun removeFavorite(id: Int) {
 
         viewModelScope.launch {
-            homeUseCase.removeFavoriteHome(id).collect{resource->
-                when(resource){
+            homeUseCase.removeFavoriteHome(id).collect { resource ->
+                when (resource) {
                     is Resource.Loading -> {
 
                     }
+
                     is Resource.Success -> {
-                        //getPetsInfos()
                         Log.d("AppSuccess", "removeFavorite:${resource.data?.message} ")
                     }
+
                     is Resource.Error -> {
                         Log.d("AppError", "removeFavorite:${resource.data?.message} ")
                     }
@@ -140,25 +196,82 @@ class HomeModel @Inject constructor(
         }
     }
 
-    internal fun getProfile(){
+    internal fun getProfile() {
+
         viewModelScope.launch {
-            homeUseCase.getProfileHome().collectLatest {resource->
+
+            homeUseCase.getProfileHome().collectLatest { resource ->
 
                 when (resource) {
                     is Resource.Loading -> state = state.copy(isLoading = resource.isLoading)
                     is Resource.Success -> {
+
                         resource.data?.let {
-                            state = state.copy(profileName = it.name,profileCountry = it.country)
+                            state = state.copy(
+                                profileName = it.name,
+                                profilePic = it.profilePic ?: "",
+                                profileCountry = it.country
+                            )
                         }
+
+
+                        if (currentUserId != -1) {
+
+                            if (!state.profilePic.isNullOrEmpty()) {
+                                val uniquePicName = UUID.nameUUIDFromBytes(state.profilePic.toByteArray())
+                                val ref = firebaseStorage.child("$currentUserId/profilePictures.jpg/$uniquePicName")
+                                ref.putFile(state.profilePic.toUri())
+
+                                // Update profile name and profile pic
+                                firebaseFirestore.document("$USERS_COLLECTION/$currentUserId")
+                                    .set(
+                                        mapOf(
+                                            "name" to state.profileName,
+                                            "profilePic" to state.profilePic
+                                        ),
+                                        SetOptions.merge() // Merge the data with existing document
+                                    )
+                            } else {
+                                // Update only the profile name, set profilePic field to an empty string
+                                firebaseFirestore.document("$USERS_COLLECTION/$currentUserId")
+                                    .set(
+                                        mapOf(
+                                            "name" to state.profileName,
+                                            "profilePic" to ""
+                                        ),
+                                        SetOptions.merge() // Merge the data with existing document
+                                    )
+                            }
+                        }
+
+
                     }
+
                     is Resource.Error -> {
                         resource.message?.let {
                             state = state.copy(errorMessage = it)
                         }
-                        Log.d("AppError", "getFavorite: ${state.errorMessage}")
+                        Log.d("AppError", "getProfile: ${state.errorMessage}")
                     }
                 }
             }
+        }
+    }
+
+
+    private suspend fun hasUnseenMessage(): Boolean {
+        val querySnapshot = firebaseFirestore
+            .collection("$USERS_COLLECTION/$currentUserId/$SHARED_CHAT_COLLECTION")
+            .whereEqualTo("messageStatus", "UNSEEN")
+            .get()
+            .await()
+
+        return !querySnapshot.isEmpty
+    }
+     fun updateHasUnseenMessage() {
+        viewModelScope.launch {
+            val result = hasUnseenMessage()
+            _hasUnseenMessage.value = result
         }
     }
 }

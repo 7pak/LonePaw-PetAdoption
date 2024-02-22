@@ -7,6 +7,7 @@ data class ProfileDetailState(
     val email: String = "",
     val name: String = "",
     val username: String = "",
+    val profilePic: String? = null,
     val isLoading:Boolean = false,
-    val error:String = ""
+    val serverMessage:String = ""
 )

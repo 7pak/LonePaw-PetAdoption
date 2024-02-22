@@ -1,7 +1,6 @@
 package com.profile.ui.screens.add_post
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,12 +8,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,8 +72,10 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
         }
     }
 
-    LaunchedEffect(key1 = true){
-        if (addPostModel.postId != -1){
+
+
+    LaunchedEffect(key1 = true) {
+        if (addPostModel.postId != -1) {
             addPostModel.getPetInfo(addPostModel.postId)
         }
     }
@@ -83,33 +84,44 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
     var expanded by remember {
         mutableStateOf(false)
     }
-    val categoryCourses =
-        mapOf(1 to "cat", 2 to "dog", 3 to "bird", 4 to "hamster", 5 to "rabbit",6 to "other")
+    val categoryPets =
+        mapOf(1 to "cat", 2 to "dog", 3 to "bird", 4 to "hamster", 5 to "rabbit", 6 to "other")
+
+    val preCategory = categoryPets.entries.find { it.key == state.categoryId }?.value ?: ""
 
     var categoryItem by remember {
-        mutableStateOf("")
+        mutableStateOf(preCategory)
     }
 
     addPostModel.updateState(
         state.copy(
             categoryId = try {
-                categoryCourses.entries.find { it.value == categoryItem }!!.key
+                categoryPets.entries.find { it.value == categoryItem }!!.key
 
             } catch (e: NullPointerException) {
                 0
             }
         )
     )
+    var isFormFilled by remember {
+        mutableStateOf(false)
+    }
 
+    LaunchedEffect(state) {
+        isFormFilled =
+            state.petName.isNotEmpty() && state.petType.isNotEmpty() &&
+                    state.petAge != null && !state.petPhoto.isNullOrEmpty() && state.petGender.isNotEmpty() &&
+                    state.petBreed.isNotEmpty() && state.petDesc.isNotEmpty() && state.categoryId != null
+    }
 
-
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background_post),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
+                .align(Alignment.Center)
                 .background(MaterialTheme.colorScheme.background)
         )
 
@@ -182,6 +194,7 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
 
                 OutLinedTextFieldItem(
                     value = state.petDesc, onValueChange = {
+                        Log.d("ADDpet", "AddPetScreen:$state")
                         if (it.length < 200) {
                             addPostModel.updateState(state.copy(petDesc = it))
                         }
@@ -197,10 +210,10 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
 
             item {
                 DropDownMenuEditableItem(
-                    placeHolder = "Category",
+                    placeHolder = preCategory.ifEmpty { "Category" },
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    items = categoryCourses,
+                    items = categoryPets,
                     onItemSelected = {
                         categoryItem = it
                     },
@@ -211,24 +224,35 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                AddPhotoItem {
-                    addPostModel.updateState(state.copy(petPhoto = it))
+                AddPhotoItem {uriList->
+                    uriList?.let {
+                        addPostModel.updateState(state.copy(petPhoto =uriList))
+                    }
                     Log.d("AddPet", "AddPetScreen: $state----------------")
                 }
             }
 
             item {
-                ConfirmButtonItem(icon = Icons.Default.ArrowForward, isEnabled = true) {
+                ConfirmButtonItem(
+                    icon = Icons.Default.ArrowForward,
+                    isEnabled = isFormFilled
+                ) {
 
-                    if (addPostModel.postId != -1){
+                    if (addPostModel.postId != -1) {
                         addPostModel.updatePost()
-                    }else {
+                    } else {
                         addPostModel.addPost()
                     }
                 }
 
                 Spacer(modifier = Modifier.height(7.dp))
             }
+        }
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }

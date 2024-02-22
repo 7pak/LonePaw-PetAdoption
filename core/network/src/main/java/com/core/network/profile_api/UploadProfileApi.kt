@@ -23,7 +23,7 @@ interface UploadProfileApi {
         @Body map: MultiPartFormDataContent
     ): HttpResponse
 
-    @POST("api/v1/profile")
+    @POST("api/v1/update/profile")
     suspend fun updateProfile(
         @Header("Authorization") token: String,
         @Body map: MultiPartFormDataContent

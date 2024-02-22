@@ -61,7 +61,7 @@ fun DropDownMenuEditableItem(
                     containerColor = Color.White,
                     focusedBorderColor = MaterialTheme.colorScheme.tertiary,
                     //unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
-                    textColor = MaterialTheme.colorScheme.tertiary
+                  //  textColor = MaterialTheme.colorScheme.tertiary
                 ),
             )
 

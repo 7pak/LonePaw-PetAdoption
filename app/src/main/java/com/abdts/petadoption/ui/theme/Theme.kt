@@ -60,7 +60,7 @@ fun PetAdoptionTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = if (darkTheme) colorScheme.background.toArgb() else colorScheme.onBackground.toArgb()
+            window.statusBarColor = Red.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

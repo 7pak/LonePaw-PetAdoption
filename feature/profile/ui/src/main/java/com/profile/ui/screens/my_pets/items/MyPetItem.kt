@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +40,13 @@ import com.core.database.model.PetInfo
 import com.profile.ui.ui.theme.PetAdoptionTheme
 
 @Composable
-fun MyPetItem(context: Context, petInfo: PetInfo,onDeletePost: (Int) -> Unit,onUpdatePost:(Int)->Unit) {
+fun MyPetItem(
+    context: Context,
+    petInfo: PetInfo,
+    onDeletePost: (Int) -> Unit,
+    onUpdatePost: (Int) -> Unit,
+    onNavigate: () -> Unit
+) {
 
 
     Row(
@@ -51,11 +58,14 @@ fun MyPetItem(context: Context, petInfo: PetInfo,onDeletePost: (Int) -> Unit,onU
             .clip(shape = CircleShape)
             .background(MaterialTheme.colorScheme.secondary.copy(0.5f))
             .padding(vertical = 8.dp)
+            .clickable {
+                onNavigate()
+            }
     ) {
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(context = context)
                 .data(
-                    petInfo.petPhoto ?: R.drawable.ic_pet
+                    petInfo.petPhoto?.firstOrNull()?.ifEmpty {  R.drawable.ic_pet} ?: R.drawable.ic_pet
                 )
                 .transformations(CircleCropTransformation())
                 .build(),
@@ -86,7 +96,7 @@ fun MyPetItem(context: Context, petInfo: PetInfo,onDeletePost: (Int) -> Unit,onU
         ) {
             IconButton(
                 onClick = {
-                        onUpdatePost(petInfo.petId)
+                    onUpdatePost(petInfo.petId)
                 },
                 modifier = Modifier.border(
                     width = 1.dp,
@@ -100,7 +110,7 @@ fun MyPetItem(context: Context, petInfo: PetInfo,onDeletePost: (Int) -> Unit,onU
             Spacer(modifier = Modifier.width(10.dp))
             IconButton(
                 onClick = {
-                      onDeletePost(petInfo.petId)
+                    onDeletePost(petInfo.petId)
                 },
                 modifier = Modifier.border(
                     width = 1.dp,

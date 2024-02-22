@@ -69,7 +69,7 @@ internal fun OutLineTextFieldItem(
         colors = TextFieldDefaults.outlinedTextFieldColors(
             containerColor = Color.White,
             focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-            textColor = Color.Black,
+            //textColor = Color.Black,
             cursorColor = MaterialTheme.colorScheme.tertiary,
             focusedBorderColor = MaterialTheme.colorScheme.tertiary
         ),

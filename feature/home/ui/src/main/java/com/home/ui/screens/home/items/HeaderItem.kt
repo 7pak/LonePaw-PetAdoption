@@ -2,13 +2,17 @@ package com.home.ui.screens.home.items
 
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ForwardToInbox
 import androidx.compose.material3.Icon
@@ -18,8 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,7 +43,9 @@ fun HeaderItem(
     profilePic: String,
     profileName: String,
     profileCountry:String,
-    onNavigate: () -> Unit
+    hasUnseenMessage:Boolean,
+    onChatNavigate: () -> Unit,
+    onProfileNavigate: () -> Unit
 ) {
 
     Row(
@@ -67,7 +73,7 @@ fun HeaderItem(
                 .size(70.dp)
                 // .weight(1f)
                 .clickable {
-                    onNavigate()
+                    onProfileNavigate()
                 }
         )
 
@@ -99,23 +105,35 @@ fun HeaderItem(
 
         }
 
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Default.ForwardToInbox,
-                contentDescription = "inbox",
-                tint = Beige,
-                modifier = Modifier
-                    .size(35.dp)
-                    .weight(10f)
-            )
+        Box(modifier = Modifier.size(35.dp)) {
+            IconButton(onClick = onChatNavigate) {
+                Icon(
+                    imageVector = Icons.Default.ForwardToInbox,
+                    contentDescription = "inbox",
+                    tint = Beige,
+                    modifier = Modifier
+                        .size(35.dp)
+                )
+            }
+
+            if (hasUnseenMessage) {
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .clip(CircleShape)
+                        .background(Color.Green)
+                        .align(Alignment.TopEnd)
+                        .offset(x = 6.dp, y = (-6).dp)
+                )
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HeaderItemPreview() {
-    PetAdoptionTheme {
-        //HeaderItem(LocalContext.current) {}
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HeaderItemPreview() {
+//    PetAdoptionTheme {
+//        //HeaderItem(LocalContext.current) {}
+//    }
+//}

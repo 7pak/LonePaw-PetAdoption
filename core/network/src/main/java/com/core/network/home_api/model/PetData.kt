@@ -25,12 +25,16 @@ data class PetData(
     val petGender: String,
     @SerializedName("owner_name")
     val ownerName:String,
+    @SerializedName("owner_id")
+    val ownerId:Int,
+    @SerializedName("owner_profile")
+    val ownerProfilePic:String,
     @SerializedName("pet_name")
     val petName: String,
     @SerializedName("pet_desc")
     val petDesc:String,
-    @SerializedName("pet_photo")
-    val petPhoto: String,
+    @SerializedName("pet_photos")
+    val petPhotos: List<String>,
     @SerializedName("pet_type")
     val petType: String,
     @SerializedName("pet_favorite")

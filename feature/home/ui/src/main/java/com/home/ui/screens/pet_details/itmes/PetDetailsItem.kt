@@ -29,11 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,15 +40,12 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.core.common.R
-import com.core.database.model.PetInfo
 import com.home.ui.screens.pet_details.PetDetailState
-import com.home.ui.ui.theme.PetAdoptionTheme
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -59,7 +54,7 @@ fun PetDetailsItem(
     modifier: Modifier = Modifier,
     context: Context,
     petInfo: PetDetailState,
-    onAdopt: (phone: String) -> Unit
+    onAdopt: (ownerId: Int?, phone: String) -> Unit
 ) {
     val properties = mapOf(
         "Type" to petInfo.petType,
@@ -88,13 +83,13 @@ fun PetDetailsItem(
             PetOwnerItem(
                 modifier = Modifier.weight(2f),
                 context = context,
-                ownerImage = petInfo.petPhoto,
+                ownerImage = petInfo.ownerPhoto ?: "",
                 ownerName = petInfo.ownerName,
                 createdAt = petInfo.createdAt
             )
             PetDesItem(modifier = Modifier.weight(4f), petDesc = petInfo.petDesc)
             PetContactInfoItem(modifier = Modifier.weight(3f)) {
-                onAdopt(petInfo.contactNumber)
+                onAdopt(petInfo.ownerId, petInfo.contactNumber)
             }
         }
     }
@@ -179,7 +174,7 @@ fun PetOwnerItem(
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(context = context)
                 .data(
-                    R.drawable.ic_profile
+                    ownerImage.ifEmpty { R.drawable.ic_profile }
                 )
                 .transformations(CircleCropTransformation())
                 .build(),
@@ -192,7 +187,9 @@ fun PetOwnerItem(
             modifier = Modifier
                 .size(60.dp)
                 .weight(3f)
-                .clickable { }, colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.tertiary)
+                .clickable { },
+            colorFilter = if (ownerImage.isNullOrEmpty())
+                ColorFilter.tint(MaterialTheme.colorScheme.tertiary) else null
         )
 
         Column(
@@ -271,7 +268,7 @@ fun PetContactInfoItem(modifier: Modifier = Modifier, onAdopt: () -> Unit) {
             onClick = {
                 onAdopt()
             }) {
-            Text(text = "Adopt Now")
+            Text(text = "Contact owner")
         }
 
     }
@@ -291,10 +288,3 @@ fun formatTimestamp(timestamp: String): String {
     return ""
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PetDetailItemPreview() {
-    PetAdoptionTheme {
-        //PetDetailsItem(context = LocalContext.current)
-    }
-}

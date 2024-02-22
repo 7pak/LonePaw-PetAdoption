@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,26 +29,26 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AddPhotoItem(onAddedPhoto: (Uri?) -> Unit) {
+fun AddPhotoItem(onAddedPhoto: (List<String>?) -> Unit) {
 
-    var uri: Uri? by remember {
-        mutableStateOf(null)
+    var uris by remember {
+        mutableStateOf<List<String>>(emptyList())
     }
 
     // Handle the result from the photoPicker
-    val photoPickerResultHandler: (Uri?) -> Unit = { newUri ->
-        Log.d("AddPet", "AddPhotoItem: $uri")
-        if (newUri != null) {
-            uri = newUri
+    val photoPickerResultHandler: (List<Uri>?) -> Unit = { newUriList ->
+        Log.d("AddPet", "AddPhotoItem: $uris")
+        if (!newUriList.isNullOrEmpty()) {
+            uris = newUriList.map { it.toString() }
         }
     }
 
-    LaunchedEffect(key1 = uri){
-        onAddedPhoto(uri)
+    LaunchedEffect(key1 = uris) {
+        onAddedPhoto(uris)
     }
 
     val photoPicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
+        contract = ActivityResultContracts.PickMultipleVisualMedia(maxItems =5 ),
         onResult = photoPickerResultHandler
     )
     Row(
@@ -62,8 +61,8 @@ fun AddPhotoItem(onAddedPhoto: (Uri?) -> Unit) {
             .padding(horizontal = 15.dp)
             .clickable {
                 photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                if (uri != null) {
-                    onAddedPhoto(uri)
+                if (!uris.isNullOrEmpty()) {
+                    onAddedPhoto(uris)
                 }
 
             }, verticalAlignment = Alignment.CenterVertically
@@ -71,15 +70,15 @@ fun AddPhotoItem(onAddedPhoto: (Uri?) -> Unit) {
         Text(
             text = "Attach photo",
             style = MaterialTheme.typography.headlineSmall.copy(
-                color = if (uri == null) Color.Black else MaterialTheme.colorScheme.tertiary,
+                color = if (uris.isNullOrEmpty()) Color.Black else MaterialTheme.colorScheme.tertiary,
                 fontStyle = FontStyle.Italic
             )
         )
 
         Icon(
-            imageVector = if (uri == null) Icons.Default.AttachFile else Icons.Default.Check,
+            imageVector = if (uris.isNullOrEmpty()) Icons.Default.AttachFile else Icons.Default.Check,
             contentDescription = "attachment",
-            tint = if (uri == null) Color.Black else MaterialTheme.colorScheme.tertiary
+            tint = if (uris.isNullOrEmpty()) Color.Black else MaterialTheme.colorScheme.tertiary
         )
     }
 }

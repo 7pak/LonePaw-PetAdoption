@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
@@ -44,6 +45,7 @@ import com.core.common.ui.theme.Beige
 internal fun EditImageItem(
     modifier: Modifier = Modifier,
     context: Context,
+    image:String?,
     onClick: (Uri?) -> Unit
 ) {
 
@@ -75,7 +77,7 @@ internal fun EditImageItem(
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(context = context)
                 .data(
-                    R.drawable.ic_profile
+                    image?:R.drawable.ic_profile
                 )
                 .transformations(CircleCropTransformation())
                 .build(),
