@@ -4,7 +4,6 @@ import android.util.Log
 import com.core.common.utls.Resource
 import com.core.database.dao.PetsDao
 import com.core.database.model.PetInfo
-import com.feature.profile.domain.repository.ProfileRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +16,6 @@ import javax.inject.Inject
 import kotlin.math.pow
 
 class GetPet @Inject constructor(
-    private val profileRepository: ProfileRepository,
     private val petsDao: PetsDao
 ) {
     operator fun invoke(id:Int): Flow<Resource<PetInfo>> {
@@ -26,11 +24,8 @@ class GetPet @Inject constructor(
             emit(Resource.Loading(isLoading = true))
 
             val localPost = petsDao.getPetById(id)
-            //     if (response.data == null || response.message.isNullOrEmpty()) {
             emit(Resource.Success(data = localPost))
-//            }else
-//                emit(Resource.Success(data = remotePost?.toPetInfo()))
-//            }
+
 
 
         }.catch { cause ->

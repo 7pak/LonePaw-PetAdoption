@@ -5,6 +5,7 @@ import com.core.network.home_api.model.GetPetDataResponse
 import com.core.network.home_api.model.PetData
 import com.core.network.profile_api.model.AddPostData
 import com.core.network.profile_api.model.GetProfileDataResponse
+import com.core.network.profile_api.model.UpdatePasswordData
 import com.core.network.profile_api.model.UpdateProfileData
 import io.ktor.client.statement.HttpResponse
 
@@ -27,4 +28,6 @@ interface ProfileRepository {
 
     suspend fun getProfile(): GetProfileDataResponse
     suspend fun updateProfile(updateProfileData: UpdateProfileData): HttpResponse
+
+    suspend fun updatePassword(passwordData: UpdatePasswordData): DataResponse<*>
 }

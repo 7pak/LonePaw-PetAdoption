@@ -7,6 +7,7 @@ interface ProfileScreenNavigator {
     fun navigateToFavoriteScreen()
     fun logout()
     fun navigateToPetDetailScreen(id: Int)
+    fun navigateToResetPasswordScreen()
 }
 
 class AddPostNavArgs(val id: Int)

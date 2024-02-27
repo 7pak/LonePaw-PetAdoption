@@ -5,11 +5,11 @@ import com.core.network.home_api.HomeDataProvider
 import com.core.network.home_api.model.GetPetDataResponse
 import com.core.network.home_api.model.PetData
 import com.core.network.profile_api.model.GetProfileDataResponse
-import com.home.domain.repository.HomeRepositroy
+import com.home.domain.repository.HomeRepository
 
 class HomeRepositoryImpl(
     private val homeDataProvider: HomeDataProvider
-): HomeRepositroy {
+): HomeRepository {
     override suspend fun getPets(): GetPetDataResponse {
         return homeDataProvider.getPets()
     }

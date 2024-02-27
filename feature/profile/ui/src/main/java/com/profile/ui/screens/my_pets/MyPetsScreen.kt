@@ -22,14 +22,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.common.test_tags.HomeTestTags
 import com.profile.ui.screens.my_pets.items.MyPetHeaderItem
 import com.profile.ui.screens.my_pets.items.MyPetItem
 import com.profile.ui.shared.ProfileScreenNavigator
-import com.profile.ui.ui.theme.PetAdoptionTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -61,7 +59,7 @@ fun MyPetsScreen(myPetsModel: MyPetsModel = hiltViewModel(), navigator: ProfileS
                     .background(MaterialTheme.colorScheme.primary),
             ) {
 
-                if (state.petListings.isNullOrEmpty()) {
+                if (state.petListings.isEmpty()) {
                     item {
                         Text(
                             text = "You don't have pets for adoption",
@@ -94,13 +92,6 @@ fun MyPetsScreen(myPetsModel: MyPetsModel = hiltViewModel(), navigator: ProfileS
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MyPetScreenPreview() {
-    PetAdoptionTheme {
-        //  MyPetsScreen()
-    }
-}
 
 
 

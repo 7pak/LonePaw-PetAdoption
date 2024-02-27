@@ -2,9 +2,8 @@ package com.home.domain.use_cases
 
 import android.util.Log
 import com.core.common.utls.Resource
-import com.core.database.dao.PetsDao
 import com.core.network.DataResponse
-import com.home.domain.repository.HomeRepositroy
+import com.home.domain.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -14,13 +13,13 @@ import kotlinx.coroutines.flow.onCompletion
 import javax.inject.Inject
 
 class AddFavorite @Inject constructor(
-    private val homeRepositroy: HomeRepositroy
+    private val homeRepository: HomeRepository
 ) {
     operator fun invoke(id:Int): Flow<Resource<DataResponse<*>>> {
         return flow {
             emit(Resource.Loading(isLoading = true))
 
-            val response = homeRepositroy.addFavorite(id)
+            val response = homeRepository.addFavorite(id)
             emit(Resource.Success(response))
         }.catch {
 

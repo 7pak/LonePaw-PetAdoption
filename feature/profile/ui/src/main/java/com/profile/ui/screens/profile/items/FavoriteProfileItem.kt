@@ -22,14 +22,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.core.common.R
 import com.core.database.model.PetInfo
-import com.profile.ui.ui.theme.PetAdoptionTheme
 
 @Composable
 fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,petInfo: PetInfo?,onNavigate:()->Unit) {
@@ -61,7 +59,7 @@ fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,petInfo: P
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(context = context)
                     .data(
-                        petInfo?.petPhoto?.ifEmpty {R.drawable.ic_pet }?:R.drawable.ic_pet
+                        petInfo?.petPhoto?.firstOrNull()?.ifEmpty {R.drawable.ic_pet }?:R.drawable.ic_pet
                     )
                     .transformations(CircleCropTransformation())
                     .build(),
@@ -72,7 +70,6 @@ fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,petInfo: P
                 contentDescription = "pet favorite",
                 modifier = Modifier
                     .size(30.dp)
-                    // .weight(1f)
                     .alpha(0.4f)
             )
             Text(
@@ -92,13 +89,5 @@ fun FavoriteProfileItem(context:Context,modifier: Modifier = Modifier,petInfo: P
             ),
             modifier = Modifier.padding(vertical = 10.dp)
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FavoriteProfileItemPreview() {
-    PetAdoptionTheme {
-       // FavoriteProfileItem(LocalContext.current)
     }
 }

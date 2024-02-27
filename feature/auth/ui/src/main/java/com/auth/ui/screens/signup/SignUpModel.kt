@@ -9,7 +9,6 @@ import com.core.network.auth_api.models.RegisterUserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,7 +29,7 @@ class SignUpModel @Inject constructor(
     fun registerUser() {
 
         viewModelScope.launch {
-            authUseCase(
+            authUseCase.registerUser(
                 RegisterUserData(
                     name = state.value.fullName,
                     username = state.value.username,

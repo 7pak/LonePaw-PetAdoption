@@ -24,7 +24,7 @@ class LoginModel @Inject constructor(
     fun loginUser() {
 
         viewModelScope.launch {
-            authUseCase(
+            authUseCase.loginUser(
                 LoginUserData(
                     username_email = state.value.emailOrUsername,
                     password = state.value.password

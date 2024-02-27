@@ -25,10 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,17 +34,15 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.common.R
 import com.core.common.test_tags.HomeTestTags
-import com.home.ui.shared.HomeScreenNavigator
 import com.home.ui.screens.home.items.CategoryItem
 import com.home.ui.screens.home.items.HeaderItem
 import com.home.ui.screens.home.items.PetItem
 import com.home.ui.screens.home.items.SearchItem
-import com.home.ui.ui.theme.PetAdoptionTheme
+import com.home.ui.shared.HomeScreenNavigator
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 
@@ -73,9 +67,8 @@ fun HomeScreen(
     )
 
     LaunchedEffect(key1 = true) {
-        //Log.d(TAG, "HomeScreen: ")
         if (state.selectedCategory.isEmpty() && state.searchQuery.isEmpty()) {
-            homeModel.getPetsInfos(true)
+            homeModel.getPetsInfos()
         }
         homeModel.getProfile()
         homeModel.updateHasUnseenMessage()
@@ -97,10 +90,8 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .testTag(HomeTestTags.HOME_SCREEN),
-            // .background(Color.White)
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            val scope = rememberCoroutineScope()
 
             HeaderItem(
                 context = context,
@@ -197,11 +188,3 @@ fun HomeScreen(
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    PetAdoptionTheme {
-        // HomeScreen()
-    }
-}

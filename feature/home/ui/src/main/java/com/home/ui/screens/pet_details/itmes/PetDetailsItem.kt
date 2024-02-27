@@ -18,8 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -188,7 +188,7 @@ fun PetOwnerItem(
                 .size(60.dp)
                 .weight(3f)
                 .clickable { },
-            colorFilter = if (ownerImage.isNullOrEmpty())
+            colorFilter = if (ownerImage.isEmpty())
                 ColorFilter.tint(MaterialTheme.colorScheme.tertiary) else null
         )
 
@@ -252,7 +252,7 @@ fun PetContactInfoItem(modifier: Modifier = Modifier, onAdopt: () -> Unit) {
         )
 
         Icon(
-            imageVector = Icons.Default.Message,
+            imageVector = Icons.AutoMirrored.Filled.Message,
             contentDescription = "message",
             tint = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.weight(3f)

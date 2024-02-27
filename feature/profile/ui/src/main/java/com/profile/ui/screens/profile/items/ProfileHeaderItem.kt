@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +32,6 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.core.common.R
 import com.core.common.ui.theme.Beige
-import com.core.network.profile_api.model.ProfileData
 import com.profile.ui.screens.profile.ProfileState
 import com.profile.ui.ui.theme.PetAdoptionTheme
 
@@ -41,7 +40,7 @@ fun ProfileHeaderItem(context: Context,profileData: ProfileState,onLogout:()->Un
     Box(modifier = Modifier.fillMaxWidth()) {
         IconButton(onClick = onLogout, modifier = Modifier.align(Alignment.TopStart)) {
             Icon(
-                imageVector = Icons.Default.Logout,
+                imageVector = Icons.AutoMirrored.Filled.Logout,
                 contentDescription = "logout",
                 modifier = Modifier.size(40.dp),
                 tint = Beige

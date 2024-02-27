@@ -2,7 +2,7 @@ package com.home.domain.use_cases
 
 import com.core.common.utls.Resource
 import com.core.network.home_api.model.GetPetDataResponse
-import com.home.domain.repository.HomeRepositroy
+import com.home.domain.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class GetSearchResult @Inject constructor(
-    private val homeRepository: HomeRepositroy,
+    private val homeRepository: HomeRepository,
 ) {
 
     operator fun invoke(query:String): Flow<Resource<GetPetDataResponse>> {

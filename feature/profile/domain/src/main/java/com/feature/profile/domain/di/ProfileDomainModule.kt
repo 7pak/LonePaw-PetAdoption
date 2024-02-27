@@ -1,6 +1,5 @@
 package com.feature.profile.domain.di
 
-import com.core.database.dao.PetsDao
 import com.feature.profile.domain.repository.ProfileRepository
 import com.feature.profile.domain.use_cases.AddPost
 import com.feature.profile.domain.use_cases.DeletePost
@@ -9,6 +8,7 @@ import com.feature.profile.domain.use_cases.GetMyPets
 import com.feature.profile.domain.use_cases.GetProfile
 import com.feature.profile.domain.use_cases.ProfileUseCase
 import com.feature.profile.domain.use_cases.RemoveFavorite
+import com.feature.profile.domain.use_cases.UpdatePassword
 import com.feature.profile.domain.use_cases.UpdatePost
 import com.feature.profile.domain.use_cases.UpdateProfile
 import dagger.Module
@@ -32,7 +32,8 @@ object ProfileDomainModule {
             updatePost = UpdatePost(profileRepository),
             deletePost = DeletePost(profileRepository),
             getProfile = GetProfile(profileRepository),
-            updateProfile = UpdateProfile(profileRepository)
+            updateProfile = UpdateProfile(profileRepository),
+            updatePassword = UpdatePassword(profileRepository)
         )
     }
 }

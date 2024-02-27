@@ -2,8 +2,8 @@ package com.home.domain.use_cases
 
 import android.util.Log
 import com.core.common.utls.Resource
+import com.core.database.dao.PetsDao
 import com.core.database.model.PetInfo
-import com.home.domain.repository.HomeRepositroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,25 +16,16 @@ import javax.inject.Inject
 import kotlin.math.pow
 
 class GetPet @Inject constructor(
-    private val homeRepository: HomeRepositroy,
-    private val petsDao: com.core.database.dao.PetsDao
+    private val petsDao: PetsDao
 ) {
     operator fun invoke(id:Int): Flow<Resource<PetInfo>> {
         var retryCount = 0
         return flow {
             emit(Resource.Loading(isLoading = true))
 
-//            val response = homeRepository.getPet(id)
-//            val remotePost =response.data
-//            if (post.status==200 || post.status == 202){
-//                Log.d("AppSuccess", "invoke:${post.data} ")
-//            }
             val localPost = petsDao.getPetById(id)
-            //     if (response.data == null || response.message.isNullOrEmpty()) {
             emit(Resource.Success(data = localPost))
-//            }else
-//                emit(Resource.Success(data = remotePost?.toPetInfo()))
-//            }
+
 
 
         }.catch { cause ->

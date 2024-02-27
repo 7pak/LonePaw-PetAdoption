@@ -6,33 +6,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.Constants.SHARED_CHAT_COLLECTION
 import com.core.common.Constants.USERS_COLLECTION
 import com.core.common.utls.Resource
 import com.core.common.utls.UserVerificationModel
-import com.core.common.utls.toByteArray
 import com.core.database.dao.PetsDao
 import com.core.database.model.toPetInfo
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.storage.StorageReference
 import com.home.domain.use_cases.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,8 +34,7 @@ class HomeModel @Inject constructor(
     private val homeUseCase: HomeUseCase,
     private val dao: PetsDao,
     private val userVerificationModel: UserVerificationModel,
-    private val firebaseFirestore: FirebaseFirestore,
-    private val firebaseStorage: StorageReference
+    private val firebaseFirestore: FirebaseFirestore
 ) : AndroidViewModel(application) {
 
     private val context = application
@@ -76,7 +68,7 @@ class HomeModel @Inject constructor(
         state = newState
     }
 
-    fun getPetsInfos(fromRemote: Boolean = false) {
+    fun getPetsInfos() {
 
         viewModelScope.launch {
             homeUseCase.getPosts().collectLatest { resource ->
@@ -165,6 +157,7 @@ class HomeModel @Inject constructor(
 
                     is Resource.Success -> {
                         Log.d("AppSuccess", "addFavorite:${resource.data?.message} ")
+
                     }
 
                     is Resource.Error -> {
@@ -217,29 +210,24 @@ class HomeModel @Inject constructor(
 
                         if (currentUserId != -1) {
 
-                            if (!state.profilePic.isNullOrEmpty()) {
-                                val uniquePicName = UUID.nameUUIDFromBytes(state.profilePic.toByteArray())
-                                val ref = firebaseStorage.child("$currentUserId/profilePictures.jpg/$uniquePicName")
-                                ref.putFile(state.profilePic.toUri())
+                            if (state.profilePic.isNotEmpty()) {
 
-                                // Update profile name and profile pic
                                 firebaseFirestore.document("$USERS_COLLECTION/$currentUserId")
                                     .set(
                                         mapOf(
                                             "name" to state.profileName,
                                             "profilePic" to state.profilePic
                                         ),
-                                        SetOptions.merge() // Merge the data with existing document
+                                        SetOptions.merge()
                                     )
                             } else {
-                                // Update only the profile name, set profilePic field to an empty string
                                 firebaseFirestore.document("$USERS_COLLECTION/$currentUserId")
                                     .set(
                                         mapOf(
                                             "name" to state.profileName,
                                             "profilePic" to ""
                                         ),
-                                        SetOptions.merge() // Merge the data with existing document
+                                        SetOptions.merge()
                                     )
                             }
                         }
@@ -268,7 +256,8 @@ class HomeModel @Inject constructor(
 
         return !querySnapshot.isEmpty
     }
-     fun updateHasUnseenMessage() {
+
+    fun updateHasUnseenMessage() {
         viewModelScope.launch {
             val result = hasUnseenMessage()
             _hasUnseenMessage.value = result

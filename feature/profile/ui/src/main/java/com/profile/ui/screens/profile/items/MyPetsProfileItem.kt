@@ -22,21 +22,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.core.common.R
 import com.core.database.model.PetInfo
-import com.profile.ui.ui.theme.PetAdoptionTheme
 
 @Composable
 fun MyPetsProfileItem(context: Context,modifier: Modifier = Modifier,petInfo: PetInfo?,onNavigate:()->Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
 
             .clickable {
                 onNavigate()
@@ -62,7 +61,7 @@ fun MyPetsProfileItem(context: Context,modifier: Modifier = Modifier,petInfo: Pe
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(context = context)
                     .data(
-                        petInfo?.petPhoto?.ifEmpty {R.drawable.ic_pet }?:R.drawable.ic_pet
+                        petInfo?.petPhoto?.firstOrNull()?.ifEmpty {R.drawable.ic_pet }?:R.drawable.ic_pet
                     )
                     .transformations(CircleCropTransformation())
                     .build(),
@@ -93,13 +92,5 @@ fun MyPetsProfileItem(context: Context,modifier: Modifier = Modifier,petInfo: Pe
             ),
             modifier = Modifier.padding(vertical = 10.dp)
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MyPetsProfileItemPreview() {
-    PetAdoptionTheme {
-        //MyPetsProfileItem(LocalContext.current)
     }
 }

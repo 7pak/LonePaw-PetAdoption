@@ -8,6 +8,8 @@ data class ProfileDetailState(
     val name: String = "",
     val username: String = "",
     val profilePic: String? = null,
+    val oldPassword:String = "",
+    val newPassword:String = "",
     val isLoading:Boolean = false,
     val serverMessage:String = ""
 )

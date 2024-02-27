@@ -6,13 +6,10 @@ import com.core.network.DataResponse
 import com.core.network.profile_api.model.UpdateProfileData
 import com.feature.profile.domain.repository.ProfileRepository
 import com.google.gson.Gson
-import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import io.ktor.client.statement.readText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
@@ -30,7 +27,6 @@ class UpdateProfile @Inject constructor(
                 Gson().fromJson(response.bodyAsText(), DataResponse::class.java)
             when (response.status.value) {
                 in 200..299 -> {
-                    Log.d("AppSuccess", "invoke:${parsedResponseBody.message} ")
                     emit(Resource.Success(response,message = parsedResponseBody.message))
                 }
 

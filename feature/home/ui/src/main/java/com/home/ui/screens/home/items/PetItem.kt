@@ -1,7 +1,6 @@
 package com.home.ui.screens.home.items
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,7 +16,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,12 +36,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.core.common.test_tags.HomeTestTags.CARD_PET_ITEM
 import com.core.common.R
+import com.core.common.test_tags.HomeTestTags.CARD_PET_ITEM
 import com.core.common.ui.theme.Red
 import com.core.database.model.PetInfo
 
@@ -114,13 +111,13 @@ fun PetData(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit) {
                 .weight(4f)
         ) {
             Text(
-                text = "${pet.petName}",
+                text = pet.petName,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "${pet.petBreed}",
+                text = pet.petBreed,
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Normal),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -148,7 +145,7 @@ fun PetData(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit) {
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
-                    text = "${pet.address}",
+                    text = pet.address,
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Light),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -158,12 +155,12 @@ fun PetData(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit) {
         }
 
         IconButton(onClick = {
-            if (isLiked) {
+            isLiked = if (isLiked) {
                 onLike(true)
-                isLiked = false
+                false
             }else {
                 onLike(false)
-                isLiked = true
+                true
             }
         }, modifier = Modifier.weight(1f)) {
             Icon(
@@ -175,8 +172,3 @@ fun PetData(context: Context, pet: PetInfo, onLike: (Boolean) -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PetItemPreview() {
-    // PetItem(LocalContext.current)
-}

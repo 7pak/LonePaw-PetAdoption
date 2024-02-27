@@ -1,7 +1,7 @@
 package com.home.domain.di
 
 import com.core.database.dao.PetsDao
-import com.home.domain.repository.HomeRepositroy
+import com.home.domain.repository.HomeRepository
 import com.home.domain.use_cases.AddFavorite
 import com.home.domain.use_cases.GetPet
 import com.home.domain.use_cases.GetPosts
@@ -20,10 +20,10 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 object HomeDomainLayer {
     @Provides
-    fun provideHomeUseCase(homeRepository: HomeRepositroy, petsDao: PetsDao): HomeUseCase {
+    fun provideHomeUseCase(homeRepository: HomeRepository, petsDao: PetsDao): HomeUseCase {
         return HomeUseCase(
             getPosts = GetPosts(homeRepository, petsDao),
-            getPet = GetPet(homeRepository, petsDao),
+            getPet = GetPet(petsDao),
             addFavorite = AddFavorite(homeRepository),
             removeFavoriteHome = RemoveFavoriteHome(homeRepository),
             getProfileHome = GetProfileHome(homeRepository),

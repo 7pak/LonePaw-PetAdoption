@@ -11,17 +11,14 @@ import com.core.common.utls.Resource
 import com.core.common.utls.UserVerificationModel
 import com.feature.chat.domain.use_cases.ChatUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class ContactViewModel @Inject constructor(
     private val chatUseCase: ChatUseCase,

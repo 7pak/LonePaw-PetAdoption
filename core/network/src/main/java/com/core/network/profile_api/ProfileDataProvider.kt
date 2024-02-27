@@ -11,8 +11,8 @@ import com.core.network.home_api.model.GetPetDataResponse
 import com.core.network.home_api.model.PetData
 import com.core.network.profile_api.model.AddPostData
 import com.core.network.profile_api.model.GetProfileDataResponse
+import com.core.network.profile_api.model.UpdatePasswordData
 import com.core.network.profile_api.model.UpdateProfileData
-import io.ktor.client.request.forms.FormBuilder
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.client.statement.HttpResponse
@@ -50,7 +50,7 @@ class ProfileDataProvider @Inject constructor(
         try {
             withContext(Dispatchers.IO) {
                 addPostData.petPhotos?.forEach { uri ->
-                    val newFileName = Constants.POST_IMAGE_NAME+files.size
+                    val newFileName = Constants.POST_IMAGE_NAME + files.size
                     val file = File(externalCacheDir, newFileName)
                     val inputStream =
                         context.contentResolver.openInputStream(uri.toUri())
@@ -106,7 +106,7 @@ class ProfileDataProvider @Inject constructor(
         try {
             withContext(Dispatchers.IO) {
                 addPostData.petPhotos?.forEach { uri ->
-                    val newFileName = Constants.POST_IMAGE_NAME+files.size
+                    val newFileName = Constants.POST_IMAGE_NAME + files.size
                     val file = File(externalCacheDir, newFileName)
                     val inputStream =
                         context.contentResolver.openInputStream(uri.toUri())
@@ -228,5 +228,12 @@ class ProfileDataProvider @Inject constructor(
             "Bearer ${getToken()}",
             multipart
         )
+    }
+
+
+    suspend fun updatePassword(
+        passwordData:UpdatePasswordData
+    ): DataResponse<*>{
+        return profileApi.updatePassword(token ="Bearer ${getToken()}", passwordData = passwordData)
     }
 }

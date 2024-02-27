@@ -6,6 +6,7 @@ import com.core.network.home_api.model.PetData
 import com.core.network.profile_api.ProfileDataProvider
 import com.core.network.profile_api.model.AddPostData
 import com.core.network.profile_api.model.GetProfileDataResponse
+import com.core.network.profile_api.model.UpdatePasswordData
 import com.core.network.profile_api.model.UpdateProfileData
 import com.feature.profile.domain.repository.ProfileRepository
 import io.ktor.client.statement.HttpResponse
@@ -48,6 +49,12 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun updateProfile(updateProfileData: UpdateProfileData): HttpResponse {
         return profileDataProvider.updateProfile(updateProfileData)
+    }
+
+    override suspend fun updatePassword(
+        passwordData:UpdatePasswordData
+    ): DataResponse<*>{
+        return profileDataProvider.updatePassword(passwordData = passwordData)
     }
 
 

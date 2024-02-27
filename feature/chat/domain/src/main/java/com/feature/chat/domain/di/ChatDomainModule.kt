@@ -27,8 +27,8 @@ object ChatDomainModule {
     fun provideChatCase(firestore: FirebaseFirestore,@ApplicationContext context: Context,fireStorage: StorageReference):ChatUseCase{
         return ChatUseCase(
             sendMessage = SendMessage(firestore = firestore, fireStorage = fireStorage,context = context),
-            getMessages = GetMessages(firestore = firestore,fireStorage = fireStorage),
-            getContacts = GetContacts(firestore = firestore,fireStorage = fireStorage),
+            getMessages = GetMessages(firestore = firestore),
+            getContacts = GetContacts(firestore = firestore),
             searchContact = SearchContact(firestore = firestore),
             deleteChat = DeleteChat(firestore = firestore),
             getRecipientProfile = GetRecipientProfile(firebaseFirestore = firestore,fireStorage = fireStorage)

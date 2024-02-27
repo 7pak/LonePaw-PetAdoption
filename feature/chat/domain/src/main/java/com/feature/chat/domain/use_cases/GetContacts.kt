@@ -1,6 +1,5 @@
 package com.feature.chat.domain.use_cases
 
-import android.util.Log
 import com.core.common.Constants
 import com.core.common.Constants.USERS_COLLECTION
 import com.core.common.utls.Resource
@@ -9,10 +8,7 @@ import com.feature.chat.domain.model.User
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.toObject
-import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -20,16 +16,13 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class GetContacts @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    private val fireStorage: StorageReference
+    private val firestore: FirebaseFirestore
 ) {
 
     operator fun invoke(currentUserId: Int): Flow<Resource<List<Pair<User, ChatContent>>>> {
@@ -106,23 +99,6 @@ class GetContacts @Inject constructor(
         }.onCompletion {
             emit(Resource.Loading(isLoading = false))
         }.flowOn(Dispatchers.IO)
-    }
-
-
-    private suspend fun loadExistingContacts(currentUserId: Int): List<String> {
-        return try {
-            val querySnapshot = firestore.document("$USERS_COLLECTION/$currentUserId")
-                .collection(Constants.SHARED_CHAT_COLLECTION)
-                .orderBy("date", Query.Direction.DESCENDING)
-                .get()
-                .await()
-
-            querySnapshot.documents.mapNotNull {
-                it.id
-            }
-        } catch (e: Exception) {
-            emptyList()
-        }
     }
 
     private suspend fun getUserById(userId: String): User {

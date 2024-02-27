@@ -1,7 +1,6 @@
 package com.feature.chat.ui.screens.contacts.item
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,7 +31,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -100,6 +97,7 @@ fun ContactData(context: Context, user: User, chatContent: ChatContent) {
             .fillMaxSize()
             .background(Beige)
     ) {
+
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(context = context)
                 .data(
@@ -117,8 +115,12 @@ fun ContactData(context: Context, user: User, chatContent: ChatContent) {
                 .weight(1.4f)
                 .clip(shape = CircleShape),
             contentScale = ContentScale.Crop,
-            colorFilter = if (user.profilePic.isNullOrEmpty())
+            colorFilter = if (user.profilePic.isEmpty())
                 ColorFilter.tint(MaterialTheme.colorScheme.tertiary) else null
+        )
+        Spacer(
+            modifier = Modifier
+                .width(6.dp)
         )
 
         Column(

@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content))
             { view, insets ->
                 val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-                view.updatePadding(bottom = bottom) //complete on the manifests--> activity--> windowInput.. (adjustResize)
+                view.updatePadding(bottom = bottom)
                 insets
             }
         }

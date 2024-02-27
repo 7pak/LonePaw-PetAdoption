@@ -14,6 +14,7 @@ internal fun AppNavigation(
     token: String
 ) {
     DestinationsNavHost(
+        modifier = modifier,
         navController = navController,
         navGraph = NavGraphs(token).root,
         dependenciesContainerBuilder = {

@@ -11,6 +11,8 @@ import com.core.common.utls.Resource
 import com.core.network.profile_api.model.UpdateProfileData
 import com.feature.profile.domain.use_cases.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +23,8 @@ class ProfileDetailModel @Inject constructor(
 ):ViewModel(){
 
 
+    private var _passwordHasReset: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val passwordHasReset: StateFlow<Boolean> = _passwordHasReset
     var state by mutableStateOf(ProfileDetailState())
         private set
 
@@ -89,6 +93,25 @@ class ProfileDetailModel @Inject constructor(
                         state = state.copy(serverMessage = resource.message.toString())
                         Log.d("AppError", "updateProfile: ${resource.data?.status?.description}")
                         Log.d("AppError", "updateProfile: ${resource.data?.status?.value}---${resource.message}")
+                    }
+                }
+            }
+        }
+    }
+
+    fun updatePassword(){
+        viewModelScope.launch {
+            profileUseCase.updatePassword(oldPassword = state.oldPassword, newPassword = state.newPassword).collect{resource->
+                when (resource) {
+                    is Resource.Loading -> {
+                        state = state.copy(isLoading = resource.isLoading)
+                    }
+                    is Resource.Success -> {
+                        _passwordHasReset.value = true
+                    }
+                    is Resource.Error -> {
+                        Log.d("AppError", "updatePassword: ${resource.message.toString()}")
+                        state = state.copy(serverMessage = "Error while resetting password: "+resource.message)
                     }
                 }
             }

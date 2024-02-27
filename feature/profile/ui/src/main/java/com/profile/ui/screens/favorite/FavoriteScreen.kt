@@ -19,14 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.core.common.test_tags.HomeTestTags
 import com.profile.ui.screens.favorite.items.FavoriteHeaderItem
 import com.profile.ui.screens.favorite.items.FavoriteItem
 import com.profile.ui.shared.ProfileScreenNavigator
-import com.profile.ui.ui.theme.PetAdoptionTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -77,13 +75,5 @@ fun FavoriteScreen(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FavoriteScreenPreview() {
-    PetAdoptionTheme {
-       // FavoriteScreen()
     }
 }

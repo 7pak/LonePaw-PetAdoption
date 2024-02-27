@@ -1,6 +1,5 @@
 package com.profile.ui.screens.add_post
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,18 +34,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.core.common.R
 import com.profile.ui.screens.add_post.items.AddPhotoItem
 import com.profile.ui.screens.add_post.items.ConfirmButtonItem
 import com.profile.ui.screens.add_post.items.DropDownMenuEditableItem
 import com.profile.ui.screens.add_post.items.OutLinedTextFieldItem
-import com.profile.ui.ui.theme.PetAdoptionTheme
+import com.profile.ui.shared.AddPostNavArgs
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.core.common.R
-import com.profile.ui.shared.AddPostNavArgs
 
 @Destination(navArgsDelegate = AddPostNavArgs::class)
 @Composable
@@ -194,7 +190,6 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
 
                 OutLinedTextFieldItem(
                     value = state.petDesc, onValueChange = {
-                        Log.d("ADDpet", "AddPetScreen:$state")
                         if (it.length < 200) {
                             addPostModel.updateState(state.copy(petDesc = it))
                         }
@@ -228,13 +223,12 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
                     uriList?.let {
                         addPostModel.updateState(state.copy(petPhoto =uriList))
                     }
-                    Log.d("AddPet", "AddPetScreen: $state----------------")
                 }
             }
 
             item {
                 ConfirmButtonItem(
-                    icon = Icons.Default.ArrowForward,
+                    icon = Icons.AutoMirrored.Filled.ArrowForward,
                     isEnabled = isFormFilled
                 ) {
 
@@ -254,13 +248,5 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
                 modifier = Modifier.align(Alignment.Center)
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AddPetScreenPreview() {
-    PetAdoptionTheme {
-        //     AddPetScreen()
     }
 }

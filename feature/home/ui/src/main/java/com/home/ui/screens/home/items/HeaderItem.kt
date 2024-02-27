@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ForwardToInbox
+import androidx.compose.material.icons.automirrored.filled.ForwardToInbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,14 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.core.common.R
 import com.core.common.ui.theme.Beige
-import com.home.ui.ui.theme.PetAdoptionTheme
 
 @Composable
 fun HeaderItem(
@@ -71,7 +69,6 @@ fun HeaderItem(
             contentDescription = "profile_header",
             modifier = Modifier
                 .size(70.dp)
-                // .weight(1f)
                 .clickable {
                     onProfileNavigate()
                 }
@@ -108,7 +105,7 @@ fun HeaderItem(
         Box(modifier = Modifier.size(35.dp)) {
             IconButton(onClick = onChatNavigate) {
                 Icon(
-                    imageVector = Icons.Default.ForwardToInbox,
+                    imageVector = Icons.AutoMirrored.Filled.ForwardToInbox,
                     contentDescription = "inbox",
                     tint = Beige,
                     modifier = Modifier
@@ -130,10 +127,3 @@ fun HeaderItem(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun HeaderItemPreview() {
-//    PetAdoptionTheme {
-//        //HeaderItem(LocalContext.current) {}
-//    }
-//}

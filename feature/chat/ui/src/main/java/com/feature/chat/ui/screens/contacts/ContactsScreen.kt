@@ -39,7 +39,6 @@ import com.feature.chat.ui.shared.ContactScreenNavigator
 import com.feature.chat.ui.ui.theme.PetAdoptionTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import kotlinx.coroutines.delay
 
 
 @RootNavGraph(start = true)
@@ -77,11 +76,11 @@ fun ContactsScreen(
 
         LazyColumn(Modifier.fillMaxSize()) {
             item {
-                ContactHeaderItem(contactViewModel = contactViewModel)
+                ContactHeaderItem()
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            if (state.users.isNullOrEmpty()) {
+            if (state.users.isEmpty()) {
                 item {
                     Text(
                         text = "there in no chats...",

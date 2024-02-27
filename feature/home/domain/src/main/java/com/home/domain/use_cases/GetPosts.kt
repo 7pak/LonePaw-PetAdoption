@@ -1,11 +1,10 @@
 package com.home.domain.use_cases
 
-import android.util.Log
 import com.core.common.utls.Resource
 import com.core.database.dao.PetsDao
 import com.core.database.model.toPetInfo
 import com.core.network.home_api.model.GetPetDataResponse
-import com.home.domain.repository.HomeRepositroy
+import com.home.domain.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -21,12 +20,11 @@ import kotlin.math.pow
 
 @Singleton
 open class GetPosts @Inject constructor(
-    private val homeRepository: HomeRepositroy,
+    private val homeRepository: HomeRepository,
     private val petsDao: PetsDao
 ) {
 
     open operator fun invoke(): Flow<Resource<GetPetDataResponse>> {
-        Log.d("UIrEcOMPOS", "GETpETS: $")
 
         var retryCount = 0
         return flow {
@@ -36,7 +34,7 @@ open class GetPosts @Inject constructor(
 
             remotePosts.data?.let { list->
                 petsDao.deleteAll()
-                petsDao.upsertPet(petInfo = list.map {
+                petsDao.upsertPets(petInfo = list.map {
                     it.toPetInfo()
                 })
             }
@@ -56,17 +54,6 @@ open class GetPosts @Inject constructor(
 
             emit(Resource.Error("An unexpected error occurred: ${cause.localizedMessage}"))
         }
-//            .onStart {
-//            val currentTime = System.currentTimeMillis()
-//            val timeSinceLastRequest = currentTime - lastRequestTime
-//            val minTimeBetweenRequests = 2000L  // Adjust this value based on your needs
-//
-//            if (timeSinceLastRequest < minTimeBetweenRequests) {
-//                delay(minTimeBetweenRequests - timeSinceLastRequest)
-//            }
-//
-//            lastRequestTime = System.currentTimeMillis()
-//        }
             .onCompletion {
             emit(Resource.Loading(isLoading = false))
         }.flowOn(Dispatchers.IO)

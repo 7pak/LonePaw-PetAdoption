@@ -1,7 +1,10 @@
 package com.abdts.petadoption.navigation
 
 import android.util.Log
+import com.auth.ui.screens.destinations.EmailVerificationScreenDestination
 import com.auth.ui.screens.destinations.LoginScreenDestination
+import com.auth.ui.screens.destinations.OtpVerificationScreenDestination
+import com.auth.ui.screens.destinations.PasswordResetScreenDestination
 import com.auth.ui.screens.destinations.SignUpScreenDestination
 import com.feature.chat.ui.screens.destinations.ChatScreenDestination
 import com.feature.chat.ui.screens.destinations.ContactsScreenDestination
@@ -12,6 +15,7 @@ import com.profile.ui.screens.destinations.FavoriteScreenDestination
 import com.profile.ui.screens.destinations.MyPetsScreenDestination
 import com.profile.ui.screens.destinations.ProfileDetailScreenDestination
 import com.profile.ui.screens.destinations.ProfileScreenDestination
+import com.profile.ui.screens.destinations.ResetPasswordScreenDestination
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.NavGraphSpec
 import com.ramcosta.composedestinations.spec.Route
@@ -25,7 +29,13 @@ class NavGraphs(private val token: String) {
         override val startRoute: Route
             get() = LoginScreenDestination
         override val destinationsByRoute: Map<String, DestinationSpec<*>>
-            get() = listOf<DestinationSpec<*>>(LoginScreenDestination, SignUpScreenDestination)
+            get() = listOf<DestinationSpec<*>>(
+                LoginScreenDestination,
+                SignUpScreenDestination,
+                EmailVerificationScreenDestination,
+                OtpVerificationScreenDestination,
+                PasswordResetScreenDestination
+            )
                 .associateBy { it.route }
 
     }
@@ -52,7 +62,8 @@ class NavGraphs(private val token: String) {
                 ProfileDetailScreenDestination,
                 MyPetsScreenDestination,
                 FavoriteScreenDestination,
-                AddPetScreenDestination
+                AddPetScreenDestination,
+                ResetPasswordScreenDestination
             )
                 .associateBy { it.route }
 
@@ -80,7 +91,7 @@ class NavGraphs(private val token: String) {
         override val destinationsByRoute: Map<String, DestinationSpec<*>>
             get() = emptyMap<String, DestinationSpec<*>>()
         override val nestedNavGraphs: List<NavGraphSpec>
-            get() = listOf(auth, home, profile,chat)
+            get() = listOf(auth, home, profile, chat)
     }
 
     private fun getStartedDestination(): NavGraphSpec {

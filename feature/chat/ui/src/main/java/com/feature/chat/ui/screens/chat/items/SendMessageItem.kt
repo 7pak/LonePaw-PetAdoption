@@ -1,14 +1,11 @@
 package com.feature.chat.ui.screens.chat.items
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
-import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,8 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,10 +23,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -58,8 +51,6 @@ fun SendMessageItem(
 ) {
 
     val state = chatViewModel.state
-
-    var currentPhotoUri by remember { mutableStateOf(value = Uri.EMPTY) }
 
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(
@@ -138,7 +129,7 @@ fun SendMessageItem(
                             .size(30.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Send,
+                            imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = "send message",
                             tint = MaterialTheme.colorScheme.tertiary,
                             modifier = Modifier.fillMaxSize()
@@ -150,7 +141,7 @@ fun SendMessageItem(
 
     }
 }
-@RequiresApi(Build.VERSION_CODES.FROYO)
+@SuppressLint("SimpleDateFormat")
 fun Context.createImageFile(): File {
     // Create an image file name
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())

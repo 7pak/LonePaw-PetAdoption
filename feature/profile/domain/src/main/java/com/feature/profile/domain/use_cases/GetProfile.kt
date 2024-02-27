@@ -26,7 +26,6 @@ class GetProfile @Inject constructor(
 
             try {
                 val remotePets = profileRepository.getProfile()
-                Log.d("TRTR", "invoke:${remotePets.data}")
 
                 emit(Resource.Success(remotePets.data))
             }catch (e:Exception){

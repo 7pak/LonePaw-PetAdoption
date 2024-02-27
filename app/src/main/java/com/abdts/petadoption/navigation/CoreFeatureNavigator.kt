@@ -2,7 +2,10 @@ package com.abdts.petadoption.navigation
 
 import androidx.navigation.NavController
 import com.auth.ui.common_components.AuthScreenNavigator
+import com.auth.ui.screens.destinations.EmailVerificationScreenDestination
 import com.auth.ui.screens.destinations.LoginScreenDestination
+import com.auth.ui.screens.destinations.OtpVerificationScreenDestination
+import com.auth.ui.screens.destinations.PasswordResetScreenDestination
 import com.auth.ui.screens.destinations.SignUpScreenDestination
 import com.feature.chat.ui.screens.destinations.ChatScreenDestination
 import com.feature.chat.ui.screens.destinations.ContactsScreenDestination
@@ -15,9 +18,9 @@ import com.profile.ui.screens.destinations.FavoriteScreenDestination
 import com.profile.ui.screens.destinations.MyPetsScreenDestination
 import com.profile.ui.screens.destinations.ProfileDetailScreenDestination
 import com.profile.ui.screens.destinations.ProfileScreenDestination
+import com.profile.ui.screens.destinations.ResetPasswordScreenDestination
 import com.profile.ui.shared.ProfileScreenNavigator
 import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popUpTo
 
 class CoreFeatureNavigator(
     private val navController: NavController
@@ -48,7 +51,12 @@ class CoreFeatureNavigator(
     }
 
     override fun navigateToLoginScreen() {
-        navController.navigate(LoginScreenDestination)
+        navController.popBackStack()
+        navController.navigate(LoginScreenDestination) {
+            popUpTo(navController.graph.startDestinationId) {
+                inclusive = false
+            }
+        }
     }
 
     override fun navigateToSignUpScreen() {
@@ -63,12 +71,29 @@ class CoreFeatureNavigator(
         }
     }
 
+    override fun navigateToEmailVerificationScreen() {
+        navController.navigate(EmailVerificationScreenDestination)
+    }
+
+    override fun navigateToOtpVerificationScreen() {
+        navController.navigate(OtpVerificationScreenDestination)
+    }
+
+    override fun navigateToPasswordResetScreen() {
+        navController.navigate(PasswordResetScreenDestination)
+    }
+
     override fun navigateToProfileScreen() {
         navController.navigate(ProfileScreenDestination)
     }
 
     override fun navigateToPetDetailScreen(id:Int) {
         navController.navigate(PetDetailScreenDestination(id))
+    }
+
+    override fun navigateToResetPasswordScreen() {
+        navController.popBackStack()
+        navController.navigate(ResetPasswordScreenDestination)
     }
 
     override fun navigateToContactScreen() {

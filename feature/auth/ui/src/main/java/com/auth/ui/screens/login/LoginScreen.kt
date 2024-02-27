@@ -247,7 +247,9 @@ fun LoginScreen(
                     loginModel.loginUser()
                 }
 
-                TextButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(vertical = 15.dp)) {
+                TextButton(onClick = {
+                    navigator.navigateToEmailVerificationScreen()
+                }, modifier = Modifier.padding(vertical = 15.dp)) {
                     Text(
                         text = "Forgot your password?",
                         style = MaterialTheme.typography.bodyMedium.copy(

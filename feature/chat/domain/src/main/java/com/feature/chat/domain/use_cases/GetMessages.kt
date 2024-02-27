@@ -10,9 +10,6 @@ import com.feature.chat.domain.model.MessageStatus
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -28,8 +25,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class GetMessages @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    private val fireStorage: StorageReference
+    private val firestore: FirebaseFirestore
 ) {
 
     operator fun invoke(
@@ -57,7 +53,6 @@ class GetMessages @Inject constructor(
 
                             val message = documentChange.document.toObject(ChatContent::class.java)
 
-                            // Check the type of change and update the list accordingly
                             when (documentChange.type) {
                                 DocumentChange.Type.ADDED -> {
                                     // Handle new messages
@@ -120,7 +115,6 @@ class GetMessages @Inject constructor(
                 it.toObject(ChatContent::class.java)
             }
         } catch (e: Exception) {
-            // Handle exceptions, e.g., network issues, etc.
             emptyList()
         }
     }
@@ -150,6 +144,5 @@ class GetMessages @Inject constructor(
                 .collection(SHARED_CHAT_COLLECTION).document(recipientId)
                 .update("messageStatus", MessageStatus.SEEN)
         }
-
     }
 }

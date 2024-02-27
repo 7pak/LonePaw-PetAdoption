@@ -35,7 +35,6 @@ fun AddPhotoItem(onAddedPhoto: (List<String>?) -> Unit) {
         mutableStateOf<List<String>>(emptyList())
     }
 
-    // Handle the result from the photoPicker
     val photoPickerResultHandler: (List<Uri>?) -> Unit = { newUriList ->
         Log.d("AddPet", "AddPhotoItem: $uris")
         if (!newUriList.isNullOrEmpty()) {
@@ -61,7 +60,7 @@ fun AddPhotoItem(onAddedPhoto: (List<String>?) -> Unit) {
             .padding(horizontal = 15.dp)
             .clickable {
                 photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                if (!uris.isNullOrEmpty()) {
+                if (uris.isNotEmpty()) {
                     onAddedPhoto(uris)
                 }
 
@@ -70,15 +69,15 @@ fun AddPhotoItem(onAddedPhoto: (List<String>?) -> Unit) {
         Text(
             text = "Attach photo",
             style = MaterialTheme.typography.headlineSmall.copy(
-                color = if (uris.isNullOrEmpty()) Color.Black else MaterialTheme.colorScheme.tertiary,
+                color = if (uris.isEmpty()) Color.Black else MaterialTheme.colorScheme.tertiary,
                 fontStyle = FontStyle.Italic
             )
         )
 
         Icon(
-            imageVector = if (uris.isNullOrEmpty()) Icons.Default.AttachFile else Icons.Default.Check,
+            imageVector = if (uris.isEmpty()) Icons.Default.AttachFile else Icons.Default.Check,
             contentDescription = "attachment",
-            tint = if (uris.isNullOrEmpty()) Color.Black else MaterialTheme.colorScheme.tertiary
+            tint = if (uris.isEmpty()) Color.Black else MaterialTheme.colorScheme.tertiary
         )
     }
 }

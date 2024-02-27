@@ -36,14 +36,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.core.common.R
 import com.core.common.ui.theme.Beige
 import com.home.ui.screens.pet_details.PetDetailState
-import com.home.ui.ui.theme.PetAdoptionTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -162,13 +160,5 @@ fun ImageDetailItem(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ImageDetailItemPreview() {
-    PetAdoptionTheme {
-        //ImageDetailItem(context = LocalContext.current)
     }
 }

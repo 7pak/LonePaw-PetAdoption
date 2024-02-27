@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.Constants
 import com.core.common.utls.Resource
-import com.core.database.dao.PetsDao
 import com.google.firebase.firestore.FirebaseFirestore
 import com.home.domain.use_cases.HomeUseCase
 import com.home.ui.screens.navArgs
@@ -25,7 +24,6 @@ import javax.inject.Inject
 class PetDetailModel @Inject constructor(
     private val homeUseCase: HomeUseCase,
     private val firebaseFirestore: FirebaseFirestore,
-    private val petsDao: PetsDao,
     handle: SavedStateHandle
 ) : ViewModel() {
 
@@ -121,7 +119,7 @@ class PetDetailModel @Inject constructor(
         }
     }
 
-    suspend fun registredTochat(userId:Int):Boolean{
+    suspend fun registeredToChat(userId:Int):Boolean{
         return try {
             val query = firebaseFirestore.collection(Constants.USERS_COLLECTION).document(userId.toString()).get().await()
 

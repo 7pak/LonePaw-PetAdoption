@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.NavigateNext
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +38,7 @@ import com.core.common.R
 import com.profile.ui.screens.profile_detail.items.ConfirmProfileButtonItem
 import com.profile.ui.screens.profile_detail.items.EditImageItem
 import com.profile.ui.screens.profile_detail.items.OutLineTextFieldItem
+import com.profile.ui.shared.ProfileScreenNavigator
 import com.profile.ui.ui.theme.PetAdoptionTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -46,7 +47,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun ProfileDetailScreen(
     profileDetailModel: ProfileDetailModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    profileNavigator: ProfileScreenNavigator
 ) {
 
     val state = profileDetailModel.state
@@ -188,7 +190,7 @@ fun ProfileDetailScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)
                         .clickable {
-
+                                 profileNavigator.navigateToResetPasswordScreen()
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
@@ -200,7 +202,7 @@ fun ProfileDetailScreen(
                         modifier = Modifier
                     )
                     Icon(
-                        imageVector = Icons.Default.NavigateNext,
+                        imageVector = Icons.AutoMirrored.Filled.NavigateNext,
                         contentDescription = "navigate_password",
                         tint = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier

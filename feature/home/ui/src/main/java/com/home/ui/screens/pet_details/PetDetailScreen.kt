@@ -2,7 +2,6 @@ package com.home.ui.screens.pet_details
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -34,7 +33,6 @@ fun PetDetailScreen(
     }
     Column(Modifier.fillMaxSize()) {
         ImageDetailItem(context = context, petInfo = state) {
-            Log.d("AppSucc", "PetDetailScreen: id:${state.id}----boolean:$it")
             state.id?.let { id ->
                 if (it) {
                     petDetailModel.removePets(id)
@@ -45,7 +43,7 @@ fun PetDetailScreen(
         }
         PetDetailsItem(context = context, petInfo = state) { ownerId, phoneNumber ->
             scope.launch {
-                if (ownerId != null && petDetailModel.registredTochat(ownerId)) {
+                if (ownerId != null && petDetailModel.registeredToChat(ownerId)) {
                     navigator.navigateToChatScreen(ownerId)
                 } else {
                     context.startActivity(

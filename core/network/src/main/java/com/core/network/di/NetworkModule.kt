@@ -2,7 +2,6 @@ package com.core.network.di
 
 import android.content.Context
 import android.util.Log
-import com.core.common.Constants
 import com.core.common.Constants.BASE_URL
 import com.core.network.auth_api.AuthApi
 import com.core.network.auth_api.AuthDataProvider
@@ -56,13 +55,11 @@ object NetworkModule {
         val token = runBlocking {
             tokenFlow.firstOrNull()
         }
-        // Add token interceptor
         val tokenInterceptor = Interceptor { chain ->
             Log.d("AppToken", "provideOkHttpClient: $token")
             val request = chain.request().newBuilder()
                 .apply {
                     token?.let {
-                        //addHeader("Authorization", "Bearer $it")
                         addHeader("Accept", "application/json")
                         addHeader("Content-Type", "application/json")
                     }
@@ -79,7 +76,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -93,8 +90,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAuthDataProvider(authApi: AuthApi): AuthDataProvider {
-        return AuthDataProvider(authApi)
+    fun provideAuthDataProvider(authApi: AuthApi,tokenFlow: Flow<String?>): AuthDataProvider {
+        return AuthDataProvider(authApi, tokenFlow = tokenFlow)
     }
 
     @Provides

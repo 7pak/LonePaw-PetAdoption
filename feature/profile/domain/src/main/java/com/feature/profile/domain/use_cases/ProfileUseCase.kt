@@ -8,5 +8,6 @@ data class ProfileUseCase(
     val updatePost: UpdatePost,
     val deletePost: DeletePost,
     val getProfile: GetProfile,
-    val updateProfile: UpdateProfile
+    val updateProfile: UpdateProfile,
+    val updatePassword: UpdatePassword
 )

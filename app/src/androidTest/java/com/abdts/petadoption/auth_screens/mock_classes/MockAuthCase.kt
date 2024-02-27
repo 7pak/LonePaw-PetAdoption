@@ -11,50 +11,50 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 
-class MockAuthCase(private val authhRepository: AuthRepository) :
-    AuthUseCase(authRepository = authhRepository) {
-
-    override operator fun invoke(loginUserData: LoginUserData): Flow<Resource<LoginUserResponse>> {
-        // Create a mock successful response for testing
-        return flow {
-            if (loginUserData.username_email == "az_bod" && loginUserData.password == "12345678aA&") {
-                emit(
-                    Resource.Success(
-                        LoginUserResponse(
-                            message = "Mock Success",
-                            status = 202,
-                            data = loginUserData.copy(token = "fake-token")
-                        )
-                    )
-                )
-            } else {
-                emit(
-                    Resource.Error("An unexpected error occurred")
-                )
-            }
-        }
-    }
-
-    override operator fun invoke(registerUserData: RegisterUserData): Flow<Resource<RegisterUserResponse>> {
-        // Create a mock successful response for testing
-        return flow {
-            if (registerUserData.username == "az_bod" || registerUserData.password == "az@gamil.com") {
-                emit(
-                    Resource.Error("User Already Registered")
-                )
-            } else {
-//                emit(
+//class MockAuthCase(private val authhRepository: AuthRepository) :
+//    AuthUseCase(loginUser = authhRepository.loginUser()) {
 //
+//    override operator fun invoke(loginUserData: LoginUserData): Flow<Resource<LoginUserResponse>> {
+//        // Create a mock successful response for testing
+//        return flow {
+//            if (loginUserData.username_email == "az_bod" && loginUserData.password == "12345678aA&") {
+//                emit(
 //                    Resource.Success(
-//                        RegisterUserResponse(
+//                        LoginUserResponse(
 //                            message = "Mock Success",
 //                            status = 202,
-//                            data = registerUserData.copy(token = "fake-token")
+//                            data = loginUserData.copy(token = "fake-token")
 //                        )
 //                    )
 //                )
-
-            }
-        }
-    }
-}
+//            } else {
+//                emit(
+//                    Resource.Error("An unexpected error occurred")
+//                )
+//            }
+//        }
+//    }
+//
+//    override operator fun invoke(registerUserData: RegisterUserData): Flow<Resource<RegisterUserResponse>> {
+//        // Create a mock successful response for testing
+//        return flow {
+//            if (registerUserData.username == "az_bod" || registerUserData.password == "az@gamil.com") {
+//                emit(
+//                    Resource.Error("User Already Registered")
+//                )
+//            } else {
+////                emit(
+////
+////                    Resource.Success(
+////                        RegisterUserResponse(
+////                            message = "Mock Success",
+////                            status = 202,
+////                            data = registerUserData.copy(token = "fake-token")
+////                        )
+////                    )
+////                )
+//
+//            }
+//        }
+//    }
+//}

@@ -5,7 +5,7 @@ import com.core.network.home_api.model.GetPetDataResponse
 import com.core.network.home_api.model.PetData
 import com.core.network.profile_api.model.GetProfileDataResponse
 
-interface HomeRepositroy {
+interface HomeRepository {
     suspend fun getPets(): GetPetDataResponse
 
     suspend fun getPet(id: Int): DataResponse<PetData>

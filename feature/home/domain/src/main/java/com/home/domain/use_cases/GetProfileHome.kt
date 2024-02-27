@@ -3,7 +3,7 @@ package com.home.domain.use_cases
 import android.util.Log
 import com.core.common.utls.Resource
 import com.core.network.profile_api.model.ProfileData
-import com.home.domain.repository.HomeRepositroy
+import com.home.domain.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 import kotlin.math.pow
 
 class GetProfileHome @Inject constructor(
-    private val homeRepositroy: HomeRepositroy
+    private val homeRepository: HomeRepository
 ) {
 
     operator fun invoke(): Flow<Resource<ProfileData>> {
@@ -24,7 +24,7 @@ class GetProfileHome @Inject constructor(
         return flow {
                 emit(Resource.Loading(isLoading = true))
 
-                val remotePets = homeRepositroy.getProfile()
+                val remotePets = homeRepository.getProfile()
 
                 emit(Resource.Success(remotePets.data))
 

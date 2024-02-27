@@ -1,7 +1,6 @@
 package com.feature.chat.domain.use_cases
 
 import android.content.Context
-import android.util.Log
 import androidx.core.net.toUri
 import com.core.common.Constants
 import com.core.common.Constants.CHAT_CHANNELS_COLLECTION
@@ -11,6 +10,7 @@ import com.core.common.utls.Resource
 import com.core.common.utls.toByteArray
 import com.feature.chat.domain.model.ChatContent
 import com.feature.chat.domain.model.ImageMessage
+import com.feature.chat.domain.model.MessageStatus
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
-import java.util.concurrent.CompletableFuture
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -35,7 +34,7 @@ class SendMessage @Inject constructor(
         chatContent: ChatContent
     ): Flow<Resource<Unit>> {
         return flow {
-            if (chatContent.senderId.isNullOrEmpty() || chatContent.recipientId.isNullOrEmpty()) return@flow
+            if (chatContent.senderId.isEmpty() || chatContent.recipientId.isEmpty()) return@flow
 
             val senderName = getUserName(chatContent.senderId)
             val recipientName = getUserName(chatContent.recipientId)
@@ -52,13 +51,11 @@ class SendMessage @Inject constructor(
                     ref.putBytes(byteArray).onSuccessTask {
                         ref.downloadUrl.addOnSuccessListener {uri->
                             fullChatContent = fullChatContent.copy(message = uri.toString())
-                            Log.d("AppSuccess", "invoke: $uri ")
                         }
 
                     }.await()
                 }
             }
-            Log.d("AppSuccess", "fullChat:$fullChatContent ")
 
             try {
                 starChatChannel(
@@ -85,7 +82,7 @@ class SendMessage @Inject constructor(
 
                     firestore.document("$USERS_COLLECTION/${chatContent.senderId}")
                         .collection(Constants.SHARED_CHAT_COLLECTION)
-                        .document(chatContent.recipientId).set(chatContent.copy(chatId = chatId))
+                        .document(chatContent.recipientId).set(chatContent.copy(chatId = chatId, messageStatus = MessageStatus.SEEN))
 
                     firestore.document("$USERS_COLLECTION/${chatContent.recipientId}")
                         .collection(Constants.SHARED_CHAT_COLLECTION)
@@ -95,7 +92,7 @@ class SendMessage @Inject constructor(
                 } else {
                     firestore.document("$USERS_COLLECTION/${chatContent.senderId}")
                         .collection(Constants.SHARED_CHAT_COLLECTION)
-                        .document(chatContent.recipientId).set(chatContent.copy(chatId = newChatId))
+                        .document(chatContent.recipientId).set(chatContent.copy(chatId = newChatId, messageStatus = MessageStatus.SEEN))
 
                     firestore.document("$USERS_COLLECTION/${chatContent.recipientId}")
                         .collection(Constants.SHARED_CHAT_COLLECTION)
