@@ -54,6 +54,7 @@ fun PetDetailsItem(
     modifier: Modifier = Modifier,
     context: Context,
     petInfo: PetDetailState,
+    currentUser:Int,
     onAdopt: (ownerId: Int?, phone: String) -> Unit
 ) {
     val properties = mapOf(
@@ -88,8 +89,10 @@ fun PetDetailsItem(
                 createdAt = petInfo.createdAt
             )
             PetDesItem(modifier = Modifier.weight(4f), petDesc = petInfo.petDesc)
-            PetContactInfoItem(modifier = Modifier.weight(3f)) {
-                onAdopt(petInfo.ownerId, petInfo.contactNumber)
+            if (currentUser>-1 && currentUser != petInfo.ownerId) {
+                PetContactInfoItem(modifier = Modifier.weight(3f)) {
+                    onAdopt(petInfo.ownerId, petInfo.contactNumber)
+                }
             }
         }
     }

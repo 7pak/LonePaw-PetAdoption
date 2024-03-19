@@ -50,4 +50,15 @@ open class UserVerificationModel @Inject constructor(
             dataStore.clearUserId()
         }
     }
+
+    val isOnboardingViewed: Flow<Boolean> = dataStore.isOnboardingViewed
+        .flowOn(Dispatchers.Main)
+        .buffer(Channel.CONFLATED)
+
+
+    fun changeOnboardingStatus(viewed: Boolean) {
+        viewModelScope.launch {
+            dataStore.changeOnboardingStatus(viewed)
+        }
+    }
 }

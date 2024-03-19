@@ -10,12 +10,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.Constants
 import com.core.common.utls.Resource
+import com.core.common.utls.UserVerificationModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.home.domain.use_cases.HomeUseCase
 import com.home.ui.screens.navArgs
 import com.home.ui.shared.PetDetailNavArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -24,6 +26,7 @@ import javax.inject.Inject
 class PetDetailModel @Inject constructor(
     private val homeUseCase: HomeUseCase,
     private val firebaseFirestore: FirebaseFirestore,
+    private val userVerificationModel: UserVerificationModel,
     handle: SavedStateHandle
 ) : ViewModel() {
 
@@ -31,11 +34,14 @@ class PetDetailModel @Inject constructor(
 
     private var postId by mutableIntStateOf(-1)
 
-
+     var currentUser by mutableIntStateOf(-1)
     init {
         viewModelScope.launch {
 
             postId = handle.navArgs<PetDetailNavArgs>().id
+
+            currentUser = userVerificationModel.userIdFlow.firstOrNull()?:-1
+
             getPetInfo()
         }
 

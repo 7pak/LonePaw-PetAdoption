@@ -129,8 +129,8 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
 
             item {
                 Text(
-                    text = "Donate a pet",
-                    style = MaterialTheme.typography.headlineLarge.copy(
+                    text = "List pet for adoption",
+                    style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = Color.White,
                         fontFamily = FontFamily.Monospace
@@ -195,7 +195,7 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
                         }
                     }, label = "Pet Description",
                     focusManager = focusManager,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
                     modifier = Modifier.height(120.dp),
                     roundedCornerDp = 10.dp,
                     singleLine = false,
@@ -217,9 +217,9 @@ fun AddPetScreen(addPostModel: AddPostModel = hiltViewModel(), navigator: Destin
                     }
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
-                AddPhotoItem {uriList->
+                AddPhotoItem(context) {uriList->
                     uriList?.let {
                         addPostModel.updateState(state.copy(petPhoto =uriList))
                     }

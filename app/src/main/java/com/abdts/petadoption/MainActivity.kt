@@ -1,7 +1,6 @@
 package com.abdts.petadoption
 
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -35,11 +34,6 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch(Dispatchers.Main) {
             currentToken = userVerificationModel.tokenFlow.firstOrNull()
-            Log.d(
-                "AppToken",
-                " Collected token in MAINaCTIVITY :${currentToken} "
-            )
-
 
             setContent {
 
@@ -48,7 +42,7 @@ class MainActivity : ComponentActivity() {
                     AppNavigation(
                         navController = navController,
                         modifier = Modifier.fillMaxSize(),
-                        token = currentToken?:""
+                        token = currentToken ?: ""
                     )
                 }
             }
@@ -64,3 +58,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
+

@@ -58,6 +58,7 @@ class ProfileModel @Inject constructor(
 
     fun logout(){
         userVerificationModel.clearToken()
+        userVerificationModel.clearUserId()
     }
 
     private fun getLastPet(){

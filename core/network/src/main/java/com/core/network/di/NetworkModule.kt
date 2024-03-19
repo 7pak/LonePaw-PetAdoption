@@ -90,7 +90,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAuthDataProvider(authApi: AuthApi,tokenFlow: Flow<String?>): AuthDataProvider {
+    fun provideAuthDataProvider(authApi: AuthApi, tokenFlow: Flow<String?>): AuthDataProvider {
         return AuthDataProvider(authApi, tokenFlow = tokenFlow)
     }
 
@@ -102,7 +102,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHomeDataProvider(homeApi: HomeApi, tokenFlow: Flow<String?>,profileApi: ProfileApi): HomeDataProvider {
+    fun provideHomeDataProvider(
+        homeApi: HomeApi,
+        tokenFlow: Flow<String?>,
+        profileApi: ProfileApi
+    ): HomeDataProvider {
         return HomeDataProvider(homeApi, tokenFlow, profileApi = profileApi)
     }
 
@@ -115,7 +119,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideChatDataProvider(chatApi: ChatApi, tokenFlow: Flow<String?>): ChatDataProvider {
-        return ChatDataProvider(chatApi,tokenFlow)
+        return ChatDataProvider(chatApi, tokenFlow)
     }
 
     @Provides
@@ -127,16 +131,27 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideProfileDataProvider(profileApi: ProfileApi,tokenFlow: Flow<String?>,context: Context,uploadProfileApi: UploadProfileApi,homeApi: HomeApi): ProfileDataProvider {
-        return ProfileDataProvider(profileApi, tokenFlow =tokenFlow , context =context, uploadProfileApi =uploadProfileApi , homeApi = homeApi )
+    fun provideProfileDataProvider(
+        profileApi: ProfileApi,
+        tokenFlow: Flow<String?>,
+        context: Context,
+        uploadProfileApi: UploadProfileApi,
+        homeApi: HomeApi
+    ): ProfileDataProvider {
+        return ProfileDataProvider(
+            profileApi,
+            tokenFlow = tokenFlow,
+            context = context,
+            uploadProfileApi = uploadProfileApi,
+            homeApi = homeApi
+        )
     }
 
     @Provides
     @Singleton
     fun provideKtorClient(
         tokenFlow: Flow<String?>
-    ): HttpClient
-    {
+    ): HttpClient {
         val token = runBlocking {
             tokenFlow.firstOrNull() // Fetch the token asynchronously
         }
@@ -148,7 +163,7 @@ object NetworkModule {
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        Log.d("KtorFitLogger","log: $message")
+                        Log.d("KtorFitLogger", "log: $message")
                     }
 
                 }

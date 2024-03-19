@@ -2,4 +2,14 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="whatsapp_message">Hey
     is your pet still available for adoption?</string>
+    <string name="first_page">LonePaw is the perfect place for pet lovers! Whether
+        you\'re looking to adopt a furry friend or find a loving home for your pet,
+        our platform connects pet owners and adopters seamlessly. Get started and explore the world of pet adoption today!</string>
+
+    <string name="second_page">Browse through a wide variety of pets available for adoption. From cuddly cats to playful dogs and everything in between,
+        discover your ideal companion based
+        on your preferences. Swipe through profiles, like your favorites, and connect with pet owners to begin your adoption journey.</string>
+
+    <string name="third_page">Chat directly with pet owners to discuss adoption details and get to know the pets better.
+        Our secure chat feature ensures seamless communication for a smooth adoption process.</string>
 </resources>

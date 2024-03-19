@@ -3,6 +3,7 @@ package com.core.common.app_data
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -23,6 +24,9 @@ import javax.inject.Singleton
 
         const val USER_ID = "USER_ID"
         val userId = intPreferencesKey(USER_ID)
+
+        const val ONBOARDING_VIEWED = "ONBOARDING_VIEWED"
+        val onboardingViewed = booleanPreferencesKey(ONBOARDING_VIEWED)
     }
 
       suspend fun saveToken(token:String){
@@ -74,5 +78,26 @@ import javax.inject.Singleton
         dataStore.edit {preferences ->
             preferences.remove(DataStoreKeys.userId)
         }
+    }
+
+    suspend fun changeOnboardingStatus(viewed:Boolean){
+        dataStore.edit {preferences ->
+            preferences[DataStoreKeys.onboardingViewed] = viewed
+        }
+    }
+
+    val isOnboardingViewed: Flow<Boolean> = dataStore.data.catch { exception->
+        if (exception is IOException){
+            Log.d("DataStore", "Exception: ${exception.message.toString()} ")
+            emit(emptyPreferences())
+        }else{
+            Log.d("DataStore", "Exception2: ${exception.message.toString()} ")
+            throw exception
+        }
+    }.map {preferences ->
+
+        val onboardingStatus = preferences[DataStoreKeys.onboardingViewed] ?: false
+
+        onboardingStatus
     }
 }

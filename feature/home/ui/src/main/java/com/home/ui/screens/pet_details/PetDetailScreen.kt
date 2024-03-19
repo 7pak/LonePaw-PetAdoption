@@ -41,7 +41,7 @@ fun PetDetailScreen(
                 }
             }
         }
-        PetDetailsItem(context = context, petInfo = state) { ownerId, phoneNumber ->
+        PetDetailsItem(context = context, petInfo = state,currentUser = petDetailModel.currentUser) { ownerId, phoneNumber ->
             scope.launch {
                 if (ownerId != null && petDetailModel.registeredToChat(ownerId)) {
                     navigator.navigateToChatScreen(ownerId)
