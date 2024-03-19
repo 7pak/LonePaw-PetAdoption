@@ -21,7 +21,7 @@ LonePaw is a pet adoption app that allows users to connect with pet owners looki
 
 To use the LonePaw app,
 you can download it from the following link: 
-https://www.mediafire.com/file/rl5p5msy4p6c1wq/app-debug.apk/file
+[LonePaw apk](https://www.mediafire.com/file/6laeyh01iwhkuoh/LonePaw.apk/file)
 
 ## Contributing
 
