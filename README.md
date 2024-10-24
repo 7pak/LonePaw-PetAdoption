@@ -2,7 +2,9 @@
 
 LonePaw is a pet adoption app that allows users to connect with pet owners looking to rehome their pets. Whether you're looking to adopt a pet or find a new home for your furry friend, LonePaw provides a platform to facilitate these connections. With features like pet liking, pet search, category-based pet browsing, and chat functionality with pet owners, LonePaw makes the adoption process seamless and enjoyable.
   
+![login](images/onboarding_lonepaw.png)
 ![App Image](https://github.com/7pak/LonePaw-PetAdoption/blob/main/images/Screenshot%202024-02-28%20132326.png?raw=true)
+
 
 ## Features
 
