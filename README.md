@@ -21,6 +21,22 @@ LonePaw is a pet adoption app that allows users to connect with pet owners looki
 - ![onboarding](images/contact_lonepaw.png)
 - ![onboarding](images/chat_lonepaw.png)
 
+## Technologies Used
+
+This app leverages a range of modern technologies to deliver a robust and efficient application. Below are the key technologies and libraries utilized:
+
+- **[Kotlin](https://kotlinlang.org/)**: The primary programming language for developing the app, known for its concise syntax and powerful features for Android development.
+- **[Jetpack Compose](https://developer.android.com/jetpack/compose)**: A modern Android UI toolkit used to build native UI components with a declarative approach, enabling fast and efficient UI creation.
+- **[Ktor](https://ktor.io)**: A type-safe HTTP client used for API integration, enabling the app to fetch recipe data from external sources efficiently.
+- **[Room](https://developer.android.com/training/data-storage/room)**: An SQLite object mapping library for local database management, providing offline access to saved recipes.
+- **[MVI (Model-View-Intent)](https://developer.android.com/topic/architecture)**: The architectural pattern adopted to manage the flow of data and state within the app in a predictable manner.
+- **[MVVM (Model-View-ViewModel)](https://developer.android.com/topic/architecture)**: An architectural pattern used to separate concerns, allowing for a more modular and testable codebase.
+- **[Retrofit](https://square.github.io/retrofit/)**: A type-safe HTTP client for Android and Java used for making API requests.
+- **[Dagger Hilt](https://dagger.dev/hilt/)**: A dependency injection library that simplifies the implementation of DI patterns within the app.
+- **[Glide](https://bumptech.github.io/glide/)**: An image loading and caching library for Android, used to efficiently display recipe images.
+- **[Firebase Firestore](https://firebase.google.com/products/firestore)**: A NoSQL cloud database for storing and syncing recipe data in real time.
+- **[PHP Laravel](https://laravel.com/)**: A backend framework used for building the API that supports server-side functionalities for the app.
+
 
 ## Installation
 
